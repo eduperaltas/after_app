@@ -1,0 +1,123 @@
+{
+  "project_info": {
+    "project_number": "854677637281",
+    "firebase_url": "https://barbershome-ffc04.firebaseio.com",
+    "project_id": "barbershome-ffc04",
+    "storage_bucket": "barbershome-ffc04.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:854677637281:android:0d131fa24692f9475088e0",
+        "android_client_info": {
+          "package_name": "com.example.after_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "854677637281-e7521taanp2074v797ukl46v4vpijvc4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.after_app",
+            "certificate_hash": "6a179adde9e33a2021897c3939a145cca6f74b5f"
+          }
+        },
+        {
+          "client_id": "854677637281-4tj9nc6dq2rc9s8s505ued56iuhphof7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC6gGOTwgavQlg2c7FBr8g--HOHY6Pd31Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "854677637281-4tj9nc6dq2rc9s8s505ued56iuhphof7.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "854677637281-hsncsdkb6f4un3rmudgvosov0jmul6uo.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.appbarberia"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:854677637281:android:8ecda753f0215d755088e0",
+        "android_client_info": {
+          "package_name": "com.example.app_barberia"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "854677637281-44upa6j1njtraepahsqhl9rifshgllto.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.app_barberia",
+            "certificate_hash": "74e60975f9f2329a4d48277bcfa9355188821eec"
+          }
+        },
+        {
+          "client_id": "854677637281-9t7fjmsgapscufbr95kti5vj75q2sp67.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.app_barberia",
+            "certificate_hash": "1bc54b7579c1480eb8c4799865818b3a3a447ed2"
+          }
+        },
+        {
+          "client_id": "854677637281-f9hbppn6sbjbde1gh9b6chdskuld9uhc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.app_barberia",
+            "certificate_hash": "abddd580303e084de6e0c954f825b2373702b3d3"
+          }
+        },
+        {
+          "client_id": "854677637281-i3b98dmal19clc65c9hodo9v6f29ers2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.app_barberia",
+            "certificate_hash": "b5b0d6f69c47b9f8674df7e1e931d223e14f4dac"
+          }
+        },
+        {
+          "client_id": "854677637281-4tj9nc6dq2rc9s8s505ued56iuhphof7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC6gGOTwgavQlg2c7FBr8g--HOHY6Pd31Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "854677637281-4tj9nc6dq2rc9s8s505ued56iuhphof7.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "854677637281-hsncsdkb6f4un3rmudgvosov0jmul6uo.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.appbarberia"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
