@@ -1,399 +1,175 @@
 // @dart=2.9
-import 'package:after_app/Users/UI/Widgets/maps/search/maps1.dart';
-import 'package:after_app/Users/UI/Widgets/maps/search/user_places.dart';
-import 'package:after_app/Users/model/location_card.dart';
-import 'package:after_app/Users/repository/cloud_firestore_api.dart';
+import 'package:after_app/Users/UI/Widgets/maps/search/search_place.dart';
 import 'package:after_app/Widgets/MyPreferences.dart';
+import 'package:after_app/Widgets/styles/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:after_app/Users/model/place.dart';
-import 'package:page_transition/page_transition.dart';
+
+import '../../model/place_search.dart';
+import '../../repository/cloud_firestore_api.dart';
 
 class UserFavorites extends StatefulWidget {
   String uiduser;
 
-  UserFavorites({this.uiduser});
+  UserFavorites({Key key, this.uiduser}) : super(key: key);
 
   @override
   _UserFavoritesState createState() => _UserFavoritesState();
 }
 
-Widget  FavoritosCasa(BuildContext context, String direccion, MyPreferences _myPreferences){
-  FavoritePlacesModel casa;
-  MyPreferences _myPreferences = MyPreferences();
-  return StreamBuilder<Object>(
-      stream: CloudFirestoreAPI(uid: _myPreferences.uid,favorito: "casa").userFavoritedir,
-      builder: (context, snapshot){
-        if(!snapshot.hasData){ print("no tiene data");
-        return ListTile(
-          contentPadding: EdgeInsets.symmetric(
-            horizontal: 0.0,
-          ),
-          leading: IconButton(
-            icon: Icon(Icons.home),
-          ),
-          title: Text(
-            "Casa",
-            style: TextStyle(fontWeight: FontWeight.w500),
-          ),
-          subtitle: Text(
-            direccion, style: TextStyle(fontWeight: FontWeight.w100),
-          ),
-          trailing: IconButton(
-            icon: Icon(Icons.edit),
-            onPressed: () {
-              _myPreferences.favorite = "casa";
-              _myPreferences.commit();
-              Navigator.push(
-                  context,
-                  PageTransition(child: SearchMap(dirfavoritos: true,), type: PageTransitionType.rightToLeft));
-            },
-          ),
-        );
-        }
-        else {
-          print(" tiene data");
-          casa = snapshot.data;
-          return  ListTile(
-                      contentPadding: EdgeInsets.symmetric(
-                        horizontal: 0.0,
-                      ),
-                      leading: IconButton(
-                        icon: Icon(Icons.home),
-                      ),
-                      title: Text(
-                        "Casa",
-                        style: TextStyle(fontWeight: FontWeight.w500),
-                      ),
-                      subtitle: Text(
-                        casa.direccion != null ? casa.direccion:direccion,
-                        style: TextStyle(fontWeight: FontWeight.w100),
-                      ),
-
-                      trailing: IconButton(
-                        icon: Icon(Icons.edit),
-                        onPressed: () {
-                          _myPreferences.favorite = "casa";
-                          _myPreferences.commit();
-                          Navigator.push(
-                              context,
-                              PageTransition(child: SearchMap(dirfavoritos: true), type: PageTransitionType.rightToLeft));
-                        },
-                      ),
-                    );
-
-        }
-      }
-
-  );
-
-
-
-}
-
-Widget  FavoritosTrabajo(BuildContext context, String direccion, MyPreferences _myPreferences){
-  FavoritePlacesModel trabajo;
-  MyPreferences _myPreferences = MyPreferences();
-  return StreamBuilder<Object>(
-      stream: CloudFirestoreAPI(uid: _myPreferences.uid,favorito: "trabajo").userFavoritedir,
-      builder: (context, snapshot){
-        if(!snapshot.hasData){ print("no tiene data");
-        return ListTile(
-          contentPadding: EdgeInsets.symmetric(
-            horizontal: 0.0,
-          ),
-          leading: IconButton(
-            icon: Icon(Icons.work),
-          ),
-          title: Text(
-            "Trabajo",
-            style: TextStyle(fontWeight: FontWeight.w500),
-          ),
-          subtitle: Text(
-            direccion,
-            style: TextStyle(fontWeight: FontWeight.w100),
-          ),
-          trailing: IconButton(
-            icon: Icon(Icons.edit),
-            onPressed: () {
-              _myPreferences.favorite = "trabajo";
-              _myPreferences.commit();
-              Navigator.push(
-                  context,
-                  PageTransition(child: SearchMap(dirfavoritos: true), type: PageTransitionType.rightToLeft));
-            },
-          ),
-        );
-        }
-        else {
-          print(" tiene data");
-          trabajo = snapshot.data;
-          return  ListTile(
-            contentPadding: EdgeInsets.symmetric(
-              horizontal: 0.0,
-            ),
-            leading: IconButton(
-              icon: Icon(Icons.work),
-            ),
-            title: Text(
-              "Trabajo",
-              style: TextStyle(fontWeight: FontWeight.w500),
-            ),
-            subtitle: Text(
-                trabajo.direccion != null ? trabajo.direccion:direccion,
-              style: TextStyle(fontWeight: FontWeight.w100),
-            ),
-            trailing: IconButton(
-              icon: Icon(Icons.edit),
-              onPressed: () {
-                _myPreferences.favorite = "trabajo";
-                _myPreferences.commit();
-                Navigator.push(
-                    context,
-                    PageTransition(child: SearchMap(dirfavoritos: true), type: PageTransitionType.rightToLeft));
-              },
-            ),
-          );
-
-        }
-      }
-
-  );
-
-
-
-}
-
-
 
 class _UserFavoritesState extends State<UserFavorites> {
   String direccion= "no hay direccion guardada";
-
-  MyPreferences _myPreferences = MyPreferences();
+  final CloudFirestoreAPI _firestoreAPI = CloudFirestoreAPI();
+  List<Place> _lstPlaces;
+  List<Place> _favotitePlaces;
+  List<Place> _recentPlaces;
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<Object>(
-      stream: CloudFirestoreAPI(uid: widget.uiduser).favoriteplaces,
-      builder: (context, snapshot) {
-
-        if (!snapshot.hasData ) {
-          print("No tiene direcciones");
-          return Center(
-          child:CircularProgressIndicator() // <---- no return here
-          ); // <---- no return here
+      stream: _firestoreAPI.userDirections,
+      builder: (context,AsyncSnapshot snapshot) {
+        if(snapshot.hasData){
+          _lstPlaces = snapshot.data;
+          _favotitePlaces = _lstPlaces.where((p) => p.isFavorite).toList();
+          _recentPlaces = _lstPlaces.where((p) => !p.isFavorite).toList();
         }
-
-        else {
-
-
-          final List <FavoritePlacesModel> favoriteplaces = snapshot.data;
-          print("tiene  "+ favoriteplaces.length.toString() +"   direcciones");
-
-          if(favoriteplaces.length == 0){
-
-            print("No tiene direcciones");
-
-            return Scaffold(
-              body: SingleChildScrollView(
-                child:Container(
-                  padding: EdgeInsets.all(5.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      Divider(),
-                      FavoritosCasa( context,  direccion,  _myPreferences),
-                      Divider(),
-                      FavoritosTrabajo(context, direccion, _myPreferences),
-                      Divider(),
-                      SizedBox(
-                        height: 20.0,
-                      ),
-                      Text(
-                        "Recientes",
-                        style: TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 14.0,
-                          color: Color(0xFF9CA4AA),
-                        ),
-                      ),
-                      Column(children: [
-                        Image.asset("assets/images/sinMapas.png",width: 300.0,height:300.0,),
-                        Text(
-                          "Aun no has solicitado servicios",
-                          style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 14.0,
-                            color: Color(0xFF9CA4AA),
-                          ),
-                        ),
-                      ],)
-
+        return SingleChildScrollView(
+          child: !snapshot.hasData ? loading('Cargando...')
+              :Column(
+            children: [
+              const Text(
+                "Favoritos",textAlign: TextAlign.left,
+                style: TextStyle( fontWeight: FontWeight.w700, fontSize: 14.0, color: Color(0xFF9CA4AA), ), ),
+              const Divider( color: Colors.grey, thickness:1),
+              _favotitePlaces.isEmpty ? noDataSection("assets/images/sinMapas.png", 'No hay favoritos') :
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.2,
+                child: ListView.builder(
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  itemCount: _favotitePlaces.length,
+                  itemBuilder: (BuildContext context, int index){
+                      return favoContainer(_favotitePlaces[index].favName, _favotitePlaces[index].direction);
+                  },),
+              ),
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const SearchMap(editFav: true,)),
+                    );
+                  },
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(lprimaryColor),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: const [
+                      Icon(Icons.add, color: Colors.white,),
+                      Text('Añadir un favorito', style: TextStyle( color: Colors.white,fontSize: 16,),),
                     ],
-                  ),
-                ),
+                  )),
+
+              const Padding(
+                padding: EdgeInsets.only(top: 10.0),
+                child: Text(
+                  "Recientes",
+                  style: TextStyle( fontWeight: FontWeight.w700, fontSize: 14.0, color: Color(0xFF9CA4AA), ), ),
               ),
-            );
-
-          }
-
-          if(favoriteplaces.length == 1){
-
-            List<Place> _places = [
-              Place(
-                  name: favoriteplaces[favoriteplaces.length.toInt() - 1].direccion != null ? favoriteplaces[favoriteplaces.length.toInt() - 1].direccion : direccion),
-
-
-            ];
-
-            return Scaffold(
-              body: SingleChildScrollView(
-                child:Container(
-                  padding: EdgeInsets.all(5.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      Divider(),
-                      FavoritosCasa( context,  direccion,  _myPreferences),
-                      Divider(),
-                      FavoritosTrabajo(context, direccion, _myPreferences),
-                      Divider(),
-                      SizedBox(
-                        height: 20.0,
-                      ),
-                      Text(
-                        "Recientes",
-                        style: TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 14.0,
-                          color: Color(0xFF9CA4AA),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10.0,
-                      ),
-                      Column(
-                        children: _places
-                            .map(
-                              (place) => LocationCard(place),
-                        )
-                            .toList(),
-                      )
-                    ],
-                  ),
-                ),
+              const Divider( color: Colors.grey, thickness:1),
+              // noDataSection(),
+              _recentPlaces.isEmpty ? noDataSection("assets/images/sinMapas.png", "Aún no has solicitado servicios") :
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.25,
+                child: ListView.builder(
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  itemCount: _recentPlaces.length,
+                  itemBuilder: (BuildContext context, int index){
+                    return recienteContainer(_recentPlaces[index].direction);
+                  },),
               ),
-            );
-          }
-
-          if(favoriteplaces.length == 2){
-
-            List<Place> _places = [
-              Place(
-                  name: favoriteplaces[favoriteplaces.length.toInt() - 1].direccion != null ? favoriteplaces[favoriteplaces.length.toInt() - 1].direccion : direccion),
-              Place(
-                 name: favoriteplaces[favoriteplaces.length.toInt() - 2].direccion != null ? favoriteplaces[favoriteplaces.length.toInt() - 2].direccion : direccion),
-
-            ];
-
-            return Scaffold(
-              body: SingleChildScrollView(
-                child:Container(
-                  padding: EdgeInsets.all(5.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      Divider(),
-                      FavoritosCasa( context,  direccion,  _myPreferences),
-                      Divider(),
-                      FavoritosTrabajo(context, direccion, _myPreferences),
-                      Divider(),
-                      SizedBox(
-                        height: 20.0,
-                      ),
-                      Text(
-                        "Recientes",
-                        style: TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 14.0,
-                          color: Color(0xFF9CA4AA),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10.0,
-                      ),
-                      Column(
-                        children: _places
-                            .map(
-                              (place) => LocationCard(place),
-                        )
-                            .toList(),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            );
-          }
-
-
-
-                if(favoriteplaces.length >= 3){
-
-
-
-        List<Place> _places = [
-        Place(
-        name: favoriteplaces[favoriteplaces.length.toInt() - 1].direccion != null ? favoriteplaces[favoriteplaces.length.toInt() - 1].direccion : direccion),
-        Place(
-            name: favoriteplaces[favoriteplaces.length.toInt() - 2].direccion != null ? favoriteplaces[favoriteplaces.length.toInt() - 2].direccion : direccion),
-        Place(
-            name: favoriteplaces[favoriteplaces.length.toInt() - 3].direccion != null ? favoriteplaces[favoriteplaces.length.toInt() - 3].direccion : direccion),
-        ];
-        return Scaffold(
-          body: SingleChildScrollView(
-            child:Container(
-              padding: EdgeInsets.all(5.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  Divider(),
-                  FavoritosCasa( context,  direccion,  _myPreferences),
-                  Divider(),
-                  FavoritosTrabajo(context, direccion, _myPreferences),
-                  Divider(),
-                  SizedBox(
-                    height: 20.0,
-                  ),
-                  Text(
-                    "Recientes",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 14.0,
-                      color: Color(0xFF9CA4AA),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10.0,
-                  ),
-                  Column(
-                    children: _places
-                        .map(
-                          (place) => LocationCard(place),
-                    )
-                        .toList(),
-                  )
-                ],
-              ),
-            ),
+            ],
           ),
         );
-
-        }
-        }
       }
     );
+  }
 
+  Widget noDataSection(String imgPath, String title){
+   return Center(
+     child: Column(children: [
+        Image.asset(imgPath,width: 150.0,height:150.0,),
+        Text(
+              title,
+          style: TextStyle( fontWeight: FontWeight.w700, fontSize: 14.0, color: Color(0xFF9CA4AA), ),
+        ),
+      ],),
+   );
+  }
 
+  Widget favoContainer(String name,String direction){
+    return SizedBox(
+      height: 45,
+      width: MediaQuery.of(context).size.width,
+      child: Row(
+        children: [
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 15),
+            child: CircleAvatar(child: Icon(Icons.star, color: Colors.white,size: 20,), radius: 15, backgroundColor: Color(0xffAD8B19),),
+          ),
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(name, style: const TextStyle(
+                  color: Color(0xff222B45), fontSize: 18, fontWeight: FontWeight.w800,
+                ),),
+                Text(direction, style: const TextStyle(
+                  color: Color(0xFF9CA4AA), fontSize: 12,
+                ),),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
+  Widget recienteContainer(String description){
+    return SizedBox(
+      height: 45,
+      width: MediaQuery.of(context).size.width,
+      child: Row(
+        children: [
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 15),
+            child: Icon(Icons.place, color: Color(0xffAD8B19),size: 30),
+          ),
+          Expanded(
+            child: Text(description, style: const TextStyle(
+              color: Color(0xff222B45), fontSize: 18, fontWeight: FontWeight.w500,
+            ),),
+          ),
+        ],
+      ),
+    );
+  }
+
+  loading(String text)  {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const CircularProgressIndicator( color: Colors.black),
+          Text(text, style: const TextStyle(
+            color: Color(0xff222B45),
+            fontSize: 16,
+          ),),
+        ],
+      ),
+    );
   }
 
 }

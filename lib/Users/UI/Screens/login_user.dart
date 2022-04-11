@@ -78,7 +78,7 @@ class _SignInScreen extends State<SignInScreen> {
             child: Container(
               alignment: Alignment.center,
               padding: EdgeInsets.symmetric(horizontal: 25.0),
-              child: Text(
+              child: const Text(
                 "Regístrate",
                 style: TextStyle(
                   color: Color(0xffAD8B19),
@@ -93,16 +93,16 @@ class _SignInScreen extends State<SignInScreen> {
       ),
       body: SingleChildScrollView(
         child: Container(
-          padding: EdgeInsets.all(15.0),
+          padding: const EdgeInsets.all(15.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Container(
-                padding: EdgeInsets.symmetric(vertical: 20.0),
+                padding: const EdgeInsets.symmetric(vertical: 20.0),
                 child: Text(
                   "Inicia Sesión",
                   style: _theme.textTheme.titleLarge.merge(
-                    TextStyle(
+                    const TextStyle(
                       fontFamily: "the-foregen-rough-one",
                       fontSize: 30.0,
                       color: Colors.black,),
@@ -110,11 +110,11 @@ class _SignInScreen extends State<SignInScreen> {
                 ),
               ),
 
-              SizedBox(
+              const SizedBox(
                 height: 30.0,
               ),
               _loginForm(context),
-              SizedBox(
+              const SizedBox(
                 height: 30.0,
               ),
               Container(
@@ -124,22 +124,22 @@ class _SignInScreen extends State<SignInScreen> {
                 alignment: Alignment.center,
                 child: Row(
                   children: <Widget>[
-                    new Expanded(
-                      child: new Container(
+                    Expanded(
+                      child: Container(
                         margin: EdgeInsets.all(8.0),
                         decoration:
                         BoxDecoration(border: Border.all(width: 0.25)),
                       ),
                     ),
-                    Text(
+                    const Text(
                       "O ingresa con",
                       style: TextStyle(
                         color: Colors.grey,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    new Expanded(
-                      child: new Container(
+                    Expanded(
+                      child: Container(
                         margin: EdgeInsets.all(8.0),
                         decoration:
                         BoxDecoration(border: Border.all(width: 0.25)),
@@ -152,66 +152,64 @@ class _SignInScreen extends State<SignInScreen> {
                 width: MediaQuery.of(context).size.width,
                 margin:
                 const EdgeInsets.only(left: 29.0, right: 30.0, top: 20.0),
-                child: new Row(
+                child: Row(
                   children: <Widget>[
-                    new Expanded(
-                      child: new Container(
+                    Expanded(
+                      child:  Container(
                         margin: EdgeInsets.only(right: 8.0),
                         alignment: Alignment.center,
-                        child: new Row(
+                        child:  Row(
                           children: <Widget>[
-                            new Expanded(
-                              child: new FlatButton(
-                                shape: new RoundedRectangleBorder(
-                                  borderRadius: new BorderRadius.circular(30.0),
+                             Expanded(
+                              child:  FlatButton(
+                                shape:  RoundedRectangleBorder(
+                                  borderRadius:  BorderRadius.circular(30.0),
                                 ),
-                                color: Color(0Xff3B5998),
+                                color: const Color(0Xff3B5998),
                                 onPressed: () {
                                   print("R");
                                 },
-                                child: new Container(
-                                  child: new Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: <Widget>[
-                                      new Expanded(
-                                        child: new FlatButton(
-                                          onPressed: () => {
-                                            userBloc.facebookSignIn().then((User user) {
-                                              userBloc.createUserData(us.User(
-                                                uid: user.uid,
-                                                name: user.displayName,
-                                                email: user.email,
-                                                photoURL: user.photoURL,
-                                              ));
-                                              CloudFirestoreAPI(uid:user.uid).saveDeviceToken('user');
-                                            })
-                                          },
-                                          padding: EdgeInsets.only(
-                                            top: 20.0,
-                                            bottom: 20.0,
-                                          ),
-                                          child: new Row(
-                                            mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                            children: <Widget>[
-                                              Icon(
-                                                FontAwesomeIcons.facebookSquare,
-                                                color: Colors.white,
-                                              ),
-                                              Text(
-                                                "FACEBOOK",
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontWeight:
-                                                    FontWeight.bold),
-                                              ),
-                                            ],
-                                          ),
+                                child:  Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Expanded(
+                                      child:  FlatButton(
+                                        onPressed: () => {
+                                          userBloc.facebookSignIn().then((User user) {
+                                            userBloc.createUserData(us.User(
+                                              uid: user.uid,
+                                              name: user.displayName,
+                                              email: user.email,
+                                              photoURL: user.photoURL,
+                                            ));
+                                            CloudFirestoreAPI().saveDeviceToken('user');
+                                          })
+                                        },
+                                        padding: const EdgeInsets.only(
+                                          top: 20.0,
+                                          bottom: 20.0,
+                                        ),
+                                        child:  Row(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                          children: const <Widget>[
+                                            Icon(
+                                              FontAwesomeIcons.facebookSquare,
+                                              color: Colors.white,
+                                            ),
+                                            Text(
+                                              "FACEBOOK",
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight:
+                                                  FontWeight.bold),
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
@@ -219,25 +217,25 @@ class _SignInScreen extends State<SignInScreen> {
                         ),
                       ),
                     ),
-                    new Expanded(
-                      child: new Container(
-                        margin: EdgeInsets.only(left: 8.0),
+                     Expanded(
+                      child:  Container(
+                        margin: const EdgeInsets.only(left: 8.0),
                         alignment: Alignment.center,
-                        child: new Row(
+                        child:  Row(
                           children: <Widget>[
-                            new Expanded(
-                              child: new FlatButton(
-                                shape: new RoundedRectangleBorder(
-                                  borderRadius: new BorderRadius.circular(30.0),
+                             Expanded(
+                              child:  FlatButton(
+                                shape:  RoundedRectangleBorder(
+                                  borderRadius:  BorderRadius.circular(30.0),
                                 ),
                                 color: Color(0Xffdb3236),
                                 onPressed: () => {},
-                                child: new Container(
-                                  child: new Row(
+                                child:  Container(
+                                  child:  Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: <Widget>[
-                                      new Expanded(
-                                        child: new FlatButton(
+                                       Expanded(
+                                        child:  FlatButton(
                                           onPressed: () => {
                                             userBloc.signIn().then((User user){
                                               userBloc.createUserData(us.User(
@@ -246,17 +244,17 @@ class _SignInScreen extends State<SignInScreen> {
                                                 email: user.email,
                                                 photoURL: user.photoURL,
                                               ));
-                                              CloudFirestoreAPI(uid:user.uid).saveDeviceToken('user');
+                                              CloudFirestoreAPI().saveDeviceToken('user');
                                             }),
                                           },
-                                          padding: EdgeInsets.only(
+                                          padding: const EdgeInsets.only(
                                             top: 20.0,
                                             bottom: 20.0,
                                           ),
-                                          child: new Row(
+                                          child:  Row(
                                             mainAxisAlignment:
                                             MainAxisAlignment.spaceEvenly,
-                                            children: <Widget>[
+                                            children: const <Widget>[
                                               Icon(
                                                 FontAwesomeIcons.google,
                                                 color: Colors.white,
@@ -351,8 +349,8 @@ class _SignInScreen extends State<SignInScreen> {
               width: MediaQuery.of(context).size.width,
               height: 45.0,
               child: FlatButton(
-                shape: new RoundedRectangleBorder(
-                  borderRadius: new BorderRadius.circular(30.0),
+                shape:  RoundedRectangleBorder(
+                  borderRadius:  BorderRadius.circular(30.0),
                 ),
                 color: Color(0xffAD8B19),
                 onPressed: () async {

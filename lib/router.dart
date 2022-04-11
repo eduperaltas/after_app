@@ -10,7 +10,7 @@ import 'Users/UI/Screens/home_page_user.dart';
 import 'Users/UI/Screens/login_user.dart';
 import 'Users/UI/Screens/register_user.dart';
 import 'Users/UI/Screens/start_user.dart';
-import 'Users/UI/Widgets/maps/search/maps1.dart';
+import 'Users/UI/Widgets/maps/search/search_place.dart';
 // Routes
 // const String HomePageRoute = "/";
 const String WalkthroughRoute = "/";
@@ -39,12 +39,12 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
       return PageTransition(child: SignInScreen(), type: PageTransitionType.rightToLeft);
     case LoginBarberRoute :
     //   return PageTransition(child: LoginBarber(), type: PageTransitionType.rightToLeft);
-    // case RegisterUserRoute :
+    case RegisterUserRoute :
       return PageTransition(child: RegisterUser(), type: PageTransitionType.rightToLeft);
-    case RegisterBarberRoute :
+    // case RegisterBarberRoute :
     //   return PageTransition(child: RegisterBarber(), type: PageTransitionType.rightToLeft);
-    // case SearchinmapRoute :
-      return PageTransition(child: SearchMap(dirfavoritos: false,), type: PageTransitionType.rightToLeft);
+    case SearchinmapRoute :
+      return PageTransition(child: const SearchMap(editFav: false,), type: PageTransitionType.rightToLeft);
 
   }
 }

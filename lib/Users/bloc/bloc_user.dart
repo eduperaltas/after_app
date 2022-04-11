@@ -9,12 +9,13 @@ import 'package:after_app/Users/repository/auth_repository.dart';
 class UserBloc implements Bloc {
 
   final _auth_repository = AuthRepository();
+  final _cloudFirestoreRepository = CloudFirestoreRepository();
+
   MyPreferences _myPreferences = MyPreferences();
   //Flujo de datos - Streams
-  //Stream - Firebase
-  //StreamController
   Stream<User> streamFirebase = FirebaseAuth.instance.authStateChanges();
   Stream<User> get authStatus => streamFirebase;
+
 
   //Casos uso
   //1. SignIn a la aplicación Google
@@ -27,22 +28,28 @@ class UserBloc implements Bloc {
   Future<User> signInWithEmailAndPassword(us.User user) {
     return _auth_repository.signFirebaseMail();
   }
-  Future<User> getuserdatatocreate() {
-    return _auth_repository.getCurrentUserDatatoCreate();
-  }
-  Future<User> getuserdatatocreate1() {
-    return _auth_repository.getCurrentUserDatatoCreate();
+
+  us.User getCurrentUserData() {
+    final User _user = _auth_repository.getCurrentUserData();
+    final us.User _userData = us.User(
+      uid: _user.uid,
+      name: _user.displayName,
+      email: _user.email,
+      photoURL: _user.photoURL,
+      phonenumber: _user.phoneNumber,
+    );
+    return _userData;
   }
 
-  String getuid(){    
-    String Useruid="";
-    getuserdatatocreate().then((User user) {
-     Useruid =  user.uid.toString();
-    });
-    return Useruid;
-  }
+  // String getuid(){
+  //   String Useruid="";
+  //   getuserdatatocreate().then((User user) {
+  //    Useruid =  user.uid.toString();
+  //   });
+  //   return Useruid;
+  // }
 
-  final _cloudFirestoreRepository = CloudFirestoreRepository();
+
   void createUserData(us.User user) => _cloudFirestoreRepository.createUserDataFirestore(user);
   void createBarberData(us.User user,String bank,String nameaccount,String numaccount,String cci) => _cloudFirestoreRepository.createBarberData(user,bank,nameaccount,numaccount,cci);
   void createUserCard(CreditCardModel card) => _cloudFirestoreRepository.createUserCard(card);
@@ -52,11 +59,11 @@ class UserBloc implements Bloc {
     return _cloudFirestoreRepository.updateUserData(user, newData);
   }
   
-  signOut() {
+  signOut() async{
+    await _auth_repository.signOut();
     _myPreferences.active = false;
-    CloudFirestoreAPI(uid: _myPreferences.uid).updateBarberStateData(_myPreferences.active);
+    CloudFirestoreAPI().updateBarberStateData(_myPreferences.active);
     _myPreferences.uid = "";
-    _auth_repository.signOut();
   }
 
 

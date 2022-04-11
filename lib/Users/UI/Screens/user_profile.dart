@@ -10,25 +10,23 @@ import 'package:after_app/Users/UI/Screens/user_favorites.dart';
 
 
 class UserProfile extends StatelessWidget with NavigationStates {
-  MyPreferences _myPreferences = MyPreferences();
-  UserProfile();
+  final MyPreferences _myPreferences = MyPreferences();
+  UserProfile({Key key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
 
-    print("uid profile:" +_myPreferences.uid);
     return StreamBuilder<User>(
-      stream: CloudFirestoreAPI(uid: _myPreferences.uid).userData,
+      stream: CloudFirestoreAPI().userData,
       builder: (BuildContext context, AsyncSnapshot snapshot){
         if (!snapshot.hasData) {
-          return Center(
+          return const Center(
               child:CircularProgressIndicator());
-          // <---- no return here
         }else{
           switch(snapshot.connectionState){
             case ConnectionState.waiting:
-              return Center(child:CircularProgressIndicator());
+              return const Center(child:CircularProgressIndicator());
             case ConnectionState.none:
-              return Center(child:CircularProgressIndicator());
+              return const Center(child:CircularProgressIndicator());
             case ConnectionState.active:
               User user = snapshot.data;
               return showProfileData(snapshot,context,user);
@@ -36,6 +34,7 @@ class UserProfile extends StatelessWidget with NavigationStates {
               User user = snapshot.data;
               return showProfileData(snapshot,context,user);
           }
+          return null;
         }
       },
     );
@@ -127,18 +126,14 @@ class UserProfile extends StatelessWidget with NavigationStates {
                           ),
                         ],
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10.0,
                       ),
                       Expanded(
                         child: TabBarView(
                           children: <Widget>[
-                            Container(
-                              child: Profile(user),
-                            ),
-                            Container(
-                              child: UserFavorites(uiduser: user.uid,),
-                            ),
+                            Profile(user),
+                            UserFavorites(uiduser: user.uid,),
                             SingleChildScrollView(
                               child: CreditCardsPage(uiduser: user.uid,),
                             ),

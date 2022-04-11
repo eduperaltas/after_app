@@ -1,22 +1,25 @@
 // @dart=2.9
 import 'package:after_app/Users/UI/Widgets/maps/search/user_places.dart';
+import 'package:after_app/Users/repository/auth_repository.dart';
+import 'package:after_app/Users/repository/maps_service.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:after_app/Users/model/card.dart';
 import 'package:after_app/Users/model/user.dart';
 import 'package:after_app/Widgets/add_credit_card/credit_card_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'dart:io';
+
+import '../model/place_search.dart';
 
 class CloudFirestoreAPI {
 
   final String USERS = "users";
   final String BARBERS = "barbers";
-
-  String uid;
+  String _currentUid = AuthRepository().getCurrentUserData().uid;
   String favorito;
 
-
-  CloudFirestoreAPI({ this.uid,this.favorito });
+  CloudFirestoreAPI({ this.favorito });
 
 
   final FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -24,7 +27,7 @@ class CloudFirestoreAPI {
 
 
   void createUserData(User user) async{
-    DocumentReference ref= _db.collection(USERS).doc(user.uid).collection('datos')
+    DocumentReference ref= _db.collection(USERS).doc(_currentUid).collection('datos')
         .doc(user.uid);
     return await ref.set({
       'uid': user.uid,
@@ -44,7 +47,7 @@ class CloudFirestoreAPI {
     String fcmToken = await _fcm.getToken();
       if(tipoUsuario=='user'){
         // Save it to Firestore
-        DocumentReference ref= _db.collection(USERS).doc(uid).collection('tokens')
+        DocumentReference ref= _db.collection(USERS).doc(_currentUid).collection('tokens')
             .doc(fcmToken);
         print("el token del telefono es: "+fcmToken);
         if (fcmToken != null) {
@@ -58,7 +61,7 @@ class CloudFirestoreAPI {
       }
     if(tipoUsuario=='barber'){
       // Save it to Firestore
-      DocumentReference ref= _db.collection(BARBERS).doc(BARBERS).collection(uid)
+      DocumentReference ref= _db.collection(BARBERS).doc(BARBERS).collection(_currentUid)
           .doc('tokens').collection('tokens')
           .doc(fcmToken);
       print("el token del telefono es: "+fcmToken);
@@ -79,7 +82,7 @@ class CloudFirestoreAPI {
 
 
   void createUserCard(CreditCardModel card) async{
-    DocumentReference ref= _db.collection(USERS).doc(uid).collection('tarjetas')
+    DocumentReference ref= _db.collection(USERS).doc(_currentUid).collection('tarjetas')
         .doc("tarjeta"+card.cardNumber);
     String cid ="tarjeta"+card.cardNumber;
     return await ref.set({
@@ -93,33 +96,25 @@ class CloudFirestoreAPI {
 
 
   Future<void> deleteUserCard(String cardUid){
-    return _db.collection(USERS).doc(uid).collection('tarjetas')
+    return _db.collection(USERS).doc(_currentUid).collection('tarjetas')
         .doc(cardUid).delete();
   }
 
 
-  void createUseraddress(var latitude,var longitude, String direccion, String favorite) async{
-    DocumentReference ref= _db.collection(USERS).doc(uid).collection('direcciones')
+  void createUseraddress(Place place,bool favo,String favoName) async{
+    String uid = AuthRepository().getCurrentUserData().uid;
+    place = await MapsService().getPlaceDetails(place);
+    DocumentReference ref= _db.collection(USERS).doc(_currentUid).collection('direcciones')
         .doc();
-    DocumentReference refFavorito= _db.collection(USERS).doc(uid).collection('direcciones')
-        .doc(favorite);
-    if(favorite == ""){
       return await ref.set({
-        'latitud': latitude,
-        'longitud': longitude,
-        'direccion' : direccion,
-        'favorite' : favorite,
-
+        'placeId':place.placeId,
+        'description': place.description,
+        'direccion': place.direction,
+        'latitud': place.lat,
+        'longitud': place.lng,
+        'favorite' : favo,
+        'favName' : favoName,
       });
-    }else{
-      return await refFavorito.set({
-        'latitud': latitude,
-        'longitud': longitude,
-        'direccion' : direccion,
-        'favorite' : favorite,
-      });
-    }
-
   }
 
  Future<void> updateUserData(User user,String newData) async {
@@ -129,11 +124,6 @@ class CloudFirestoreAPI {
      'phonenumber': newData,
    });
  }
-
-
-
-
-
 
   User userDataFromSnapshot(DocumentSnapshot snapshot) {
     return User(
@@ -148,30 +138,33 @@ class CloudFirestoreAPI {
 
 
   Stream<User> get userData {
-    return _db.collection(USERS).doc(uid).collection('datos') //necesito sacar el uid
-        .doc(uid).snapshots()
+    return _db.collection(USERS).doc(_currentUid).collection('datos') //necesito sacar el uid
+        .doc(_currentUid).snapshots()
         .map(userDataFromSnapshot);
   }
 
 
 
   //obteniendo direcciones favoritas
-  FavoritePlacesModel userfavoriteSnapshot(DocumentSnapshot snapshot) {
-    return FavoritePlacesModel(
-      direccion: snapshot['direccion'],
-    );
+  List<Place> userDirectionsSnapshot(QuerySnapshot snapshot) {
+    return snapshot.docs.map((doc) {
+      return Place(
+          placeId: doc['placeId'],
+          description: doc['description'],
+          direction: doc['direccion'],
+          lat: doc['latitud'],
+          lng: doc['longitud'],
+          isFavorite: doc['favorite'],
+          favName: doc['favName']
+      );
+    }).toList();
   }
 
-
-  Stream<FavoritePlacesModel> get userFavoritedir {
-    return _db.collection(USERS).doc(uid).collection('direcciones') //necesito sacar el uid
-        .doc(favorito).snapshots()
-        .map(userfavoriteSnapshot);
+  Stream<List<Place>> get userDirections {
+    return _db.collection(USERS).doc(_currentUid).collection('direcciones')
+            .snapshots()
+        .map(userDirectionsSnapshot); 
   }
-
-
-
-
 
   // card list from snapshot
   List<CardModel> _cardListFromSnapshot(QuerySnapshot snapshot) {
@@ -188,7 +181,7 @@ class CloudFirestoreAPI {
 
   // get card stream
   Stream<List<CardModel>> get cards {
-    return _db.collection(USERS).doc(uid).collection('tarjetas') //necesito sacar el uid
+    return _db.collection(USERS).doc(_currentUid).collection('tarjetas') //necesito sacar el uid
         .snapshots()
         .map(_cardListFromSnapshot);
   }
@@ -207,7 +200,7 @@ class CloudFirestoreAPI {
 
   // get card stream
   Stream<List<FavoritePlacesModel>> get favoriteplaces {
-    return _db.collection(USERS).doc(uid).collection('direcciones') //necesito sacar el uid
+    return _db.collection(USERS).doc(_currentUid).collection('direcciones') //necesito sacar el uid
         .snapshots()
         .map(_directionsListFromSnapshot);
   }
@@ -237,7 +230,7 @@ class CloudFirestoreAPI {
 
 
   void createBarberDocument(String documento,String url) async{
-    DocumentReference ref= _db.collection(BARBERS).doc(BARBERS).collection(uid)
+    DocumentReference ref= _db.collection(BARBERS).doc(BARBERS).collection(_currentUid)
         .doc('documentos').collection('dni').doc('dni');
     return await ref.set({
       'photoUrl': url,
@@ -248,10 +241,10 @@ class CloudFirestoreAPI {
 
   void createBarberProfile(String urlprofile,String name,String study,String work,String direction,String description) async{
     DocumentReference ref= _db.collection(BARBERS).doc('profile').collection('profile')
-        .doc(uid);
+        .doc(_currentUid);
     return await ref.set({
       'active': false,
-      'uid': uid,
+      'uid': _currentUid,
       'photo profile': urlprofile,
       'name': name,
       'study': study,
@@ -266,7 +259,7 @@ class CloudFirestoreAPI {
 
   Future<void> updateBarberphoto(String llamado,String photo1) async {
     DocumentReference ref= _db.collection(BARBERS).doc('profile').collection('profile')
-        .doc(uid);
+        .doc(_currentUid);
     return await ref.set({
       llamado: photo1,
     });
@@ -291,7 +284,7 @@ class CloudFirestoreAPI {
   //
   // Stream<BarberProfileData> get barberProfileData {
   //   return _db.collection(BARBERS).doc('profile').collection('profile') //necesito sacar el uid
-  //       .doc(uid).snapshots()
+  //       .doc(_currentUid).snapshots()
   //       .map(barberProfileDataFromSnapshot);
   // }
 
@@ -313,14 +306,14 @@ class CloudFirestoreAPI {
 
 
   Stream<Barber> get barberData {
-    return _db.collection(BARBERS).doc(BARBERS).collection(uid)
+    return _db.collection(BARBERS).doc(BARBERS).collection(_currentUid)
         .doc('datos').snapshots()
         .map(barberDataFromSnapshot);
   }
 
 
   Future<void> updatebarberData(String phone,String bank,String numaccount,String cci,String accountname) async {
-    DocumentReference ref= _db.collection(BARBERS).doc(BARBERS).collection(uid)
+    DocumentReference ref= _db.collection(BARBERS).doc(BARBERS).collection(_currentUid)
         .doc('datos');
     return await ref.set({
       'phonenumber': phone,
@@ -339,7 +332,7 @@ class CloudFirestoreAPI {
         .doc(DateTime.now().toString());
     return await ref.set({
       'comentario': comentario,
-      'autoruid': uid,
+      'autoruid': _currentUid,
       'estrellas': estrellas,
       'Fecha': DateTime.now(),
     });
@@ -362,7 +355,7 @@ class CloudFirestoreAPI {
 
 
   Future<void> updateBarberStateData(bool newData) async {
-    DocumentReference ref= _db.collection(BARBERS).doc(BARBERS).collection(uid)
+    DocumentReference ref= _db.collection(BARBERS).doc(BARBERS).collection(_currentUid)
         .doc('datos');
     return await ref.update({
       'active': newData,
@@ -371,7 +364,7 @@ class CloudFirestoreAPI {
 
   Future<void> updateBarberStateProfile(bool newData) async {
     DocumentReference ref= _db.collection(BARBERS).doc('profile').collection('profile')
-        .doc(uid);
+        .doc(_currentUid);
     return await ref.update({
       'active': newData,
     });
@@ -385,7 +378,7 @@ class CloudFirestoreAPI {
     if(tipoDeServicio=='inmediato'){
       DocumentReference ref= _db.collection('servicios').doc('solicitudes').collection('inmediato').doc();
       return await ref.set({
-        'useruid': uid,
+        'useruid': _currentUid,
         'corte': corte,
         'direccion':direction,
         'latitude': latitude,
@@ -399,7 +392,7 @@ class CloudFirestoreAPI {
       DocumentReference ref= _db.collection('servicios').doc('solicitudes').collection('escoge')
           .doc();
       return await ref.set({
-        'useruid': uid,
+        'useruid': _currentUid,
         'corte': corte,
         'barberuid': barbero,
         'direccion':direction,
@@ -416,7 +409,7 @@ class CloudFirestoreAPI {
       DocumentReference ref= _db.collection('servicios').doc('solicitudes').collection('reserva')
           .doc();
       return await ref.set({
-        'useruid': uid,
+        'useruid': _currentUid,
         'corte': corte,
         'fecha': fecha,
         'hora': hora,

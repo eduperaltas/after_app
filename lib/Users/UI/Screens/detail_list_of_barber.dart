@@ -431,7 +431,7 @@ class _MyDetailPageState1 extends State<MyDetailPage1> {
                                         mainAxisAlignment: MainAxisAlignment.end,
                                         children: <Widget>[
                                           RaisedButton(onPressed: (){
-                                                CloudFirestoreAPI(uid: _myPreferences.uid).createBarberReview(superHero1.barberuid, coment, estrellas);
+                                                CloudFirestoreAPI().createBarberReview(superHero1.barberuid, coment, estrellas);
                                                 print('comentario:' + coment + 'Estrellas: '+ estrellas.toString()); //funciona
 
                                             return Navigator.of(context).pop(true);

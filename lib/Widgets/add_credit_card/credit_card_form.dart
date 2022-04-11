@@ -123,10 +123,7 @@ class _CreditCardFormState extends State<CreditCardForm> {
   @override
   Widget build(BuildContext context) {
     userBloc = BlocProvider.of<UserBloc>(context);
-    String uiduser;
-    userBloc.getuserdatatocreate().then((User user) {
-       uiduser = user.uid.toString();
-    });
+    String _userUID = userBloc.getCurrentUserData().uid;
     return Theme(
       data: ThemeData(
         primaryColor: themeColor.withOpacity(0.8),
@@ -220,8 +217,8 @@ class _CreditCardFormState extends State<CreditCardForm> {
         child: FloatingActionButton(
           elevation: 2.0,
           onPressed: () {
-            print("card UID: "+ uiduser);
-            CloudFirestoreAPI(uid: uiduser).createUserCard(creditCardModel);
+            print("card UID: "+ _userUID);
+            CloudFirestoreAPI().createUserCard(creditCardModel);
             Navigator.pop(context);
           },
           backgroundColor:  Color(0xffAD8B19),

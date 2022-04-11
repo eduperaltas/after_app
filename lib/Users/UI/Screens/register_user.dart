@@ -111,7 +111,7 @@ class _RegisterUserState extends State<RegisterUser> {
                         photoURL: "https://image.flaticon.com/icons/png/512/16/16363.png",
                         phonenumber:_phonenumber,
                       ));
-                      CloudFirestoreAPI(uid:user.uid).saveDeviceToken('user');
+                      CloudFirestoreAPI().saveDeviceToken('user');
                       });
 
                     }

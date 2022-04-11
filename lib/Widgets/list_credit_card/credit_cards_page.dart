@@ -16,7 +16,7 @@ class CreditCardsPage extends StatelessWidget {
 
     print("uid cards:" +uiduser);
     return StreamBuilder<Object>(
-        stream: CloudFirestoreAPI(uid: uiduser).cards,
+        stream: CloudFirestoreAPI().cards,
         builder: (context, snapshot) {
           if (!snapshot.hasData ) {
             print("No tiene tarjetas");
@@ -243,7 +243,7 @@ class CreditCardsPage extends StatelessWidget {
                           child: new Text("Borrar"),
                           onPressed: () {
                             print('esta tarjeta borraras: ' + cardid);
-                            CloudFirestoreAPI(uid: uiduser).deleteUserCard(cardid);
+                            CloudFirestoreAPI().deleteUserCard(cardid);
                             Navigator.of(context).pop();
                           },
                         ),

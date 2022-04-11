@@ -48,7 +48,7 @@ class _ImageCardEditState extends State<ImageCardEdit> {
     var imageUrl = await(await uploadTask.whenComplete(() => true)).ref.getDownloadURL();
     url = imageUrl.toString();
     print("Image url: " +url);
-    CloudFirestoreAPI(uid:widget.uid).updateBarberphoto(widget.photo,url);
+    CloudFirestoreAPI().updateBarberphoto(widget.photo,url);
   }
 
   @override

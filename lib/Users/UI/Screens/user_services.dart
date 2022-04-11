@@ -1,6 +1,6 @@
 // @dart=2.9
 import 'package:after_app/Users/UI/Screens/select_card.dart';
-import 'package:after_app/Users/UI/Widgets/maps/search/maps1.dart';
+import 'package:after_app/Users/UI/Widgets/maps/search/search_place.dart';
 import 'package:after_app/Widgets/sidebar/navigation_bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +17,7 @@ class UserServices extends StatefulWidget with NavigationStates {
     return _UserServices();
   }
 }
-class _UserServices extends State<UserServices> {
+class _UserServices extends State<UserServices> with NavigationStates{
   String image1="assets/images/servicios1.jpg";
   String image2="assets/images/servicios2.jpg";
   String image3="assets/images/servicios3.jpg";
@@ -113,7 +113,7 @@ class _UserServices extends State<UserServices> {
                   children: [
                     GestureDetector(
                       onTap: (){
-                        Navigator.push(context, PageTransition(child: SearchMap(dirfavoritos: false,), type: PageTransitionType.rightToLeft));
+                        Navigator.push(context, PageTransition(child: const SearchMap(editFav: false,), type: PageTransitionType.rightToLeft));
                       },
                       child: Container(
                         height:  MediaQuery.of(context).size.height*0.05,

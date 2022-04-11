@@ -28,7 +28,7 @@ class CreditCardsPago extends StatelessWidget {
               if(_myPreferences.corte=='Corte simple'){
                 precio=30;
               }
-              CloudFirestoreAPI(uid: _myPreferences.uid).createServicesDocument(_myPreferences.latitude,_myPreferences.longitude,_myPreferences.direction,_myPreferences.servicio,_myPreferences.barber, _myPreferences.corte,precio,_myPreferences.fecha,_myPreferences.hora);
+              CloudFirestoreAPI().createServicesDocument(_myPreferences.latitude,_myPreferences.longitude,_myPreferences.direction,_myPreferences.servicio,_myPreferences.barber, _myPreferences.corte,precio,_myPreferences.fecha,_myPreferences.hora);
               _myPreferences.commit();
               Navigator.push(
                   context,
@@ -41,7 +41,7 @@ class CreditCardsPago extends StatelessWidget {
             },
 
             child: StreamBuilder<Object>(
-                stream: CloudFirestoreAPI(uid: _myPreferences.uid).cards,
+                stream: CloudFirestoreAPI().cards,
                 builder: (context, snapshot) {
                   if (!snapshot.hasData ) {
                     print("No tiene tarjetas");

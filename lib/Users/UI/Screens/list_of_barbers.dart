@@ -1,7 +1,7 @@
 // @dart=2.9
 import 'package:after_app/Users/UI/Screens/user_services.dart';
 import 'package:after_app/Users/UI/Widgets/image_card_reserva.dart';
-import 'package:after_app/Users/UI/Widgets/maps/search/maps1.dart';
+import 'package:after_app/Users/UI/Widgets/maps/search/search_place.dart';
 import 'package:after_app/Users/model/barbers.dart';
 import 'package:after_app/Widgets/MyPreferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

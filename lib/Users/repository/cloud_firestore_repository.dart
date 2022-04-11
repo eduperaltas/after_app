@@ -13,4 +13,5 @@ class CloudFirestoreRepository {
   User userDataFromSnapshot(DocumentSnapshot snapshot) => _cloudFirestoreAPI.userDataFromSnapshot(snapshot);
   Future<void> updateUserData(User user,String newData)=> _cloudFirestoreAPI.updateUserData(user, newData);
 
+
 }

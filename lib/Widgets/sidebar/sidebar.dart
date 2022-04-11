@@ -7,6 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
+import '../../Users/model/user.dart';
+import '../../Users/repository/cloud_firestore_api.dart';
+import '../../Users/repository/firebase_auth_api.dart';
+import '../MyPreferences.dart';
 import 'menu_item.dart';
 import 'navigation_bloc.dart';
 
@@ -20,11 +24,14 @@ class SideBar extends StatefulWidget {
 
 class _SideBarState extends State<SideBar> with SingleTickerProviderStateMixin<SideBar> {
   UserBloc userBloc;
+  User _user;
+  FirebaseAuthAPI fAuth;
   AnimationController _animationController;
   StreamController<bool> isSidebarOpenedStreamController;
   Stream<bool> isSidebarOpenedStream;
   StreamSink<bool> isSidebarOpenedSink;
   final _animationDuration = const Duration(milliseconds: 500);
+  final MyPreferences _myPreferences = MyPreferences();
 
   @override
   void initState() {
@@ -58,7 +65,6 @@ class _SideBarState extends State<SideBar> with SingleTickerProviderStateMixin<S
 
   @override
   Widget build(BuildContext context) {
-    //userBloc = BlocProvider.of(context);
     final screenWidth = MediaQuery.of(context).size.width;
     return StreamBuilder<bool>(
       initialData: false,
@@ -73,97 +79,106 @@ class _SideBarState extends State<SideBar> with SingleTickerProviderStateMixin<S
           child: Row(
             children: <Widget>[
               Expanded(
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  color: const Color(0xffAD8B19),
-                  child: Column(
-                    children: <Widget>[
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height*0.1,
-                      ),
-                      ListTile(
-                        title: Text(
-                          "Eduardo Peralta",
-                          style: TextStyle(color: Colors.white, fontSize: MediaQuery.of(context).size.height*0.03, fontWeight: FontWeight.w800),
-                        ),
-                        subtitle: Text(
-                          "eduperaltas@hotmail.com",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: MediaQuery.of(context).size.height*0.02,
+                child: StreamBuilder(
+                  stream: CloudFirestoreAPI().userData,
+                  builder: (context,AsyncSnapshot snapshot) {
+                    _user = snapshot.data;
+                    if(!snapshot.hasData){
+                    //  Loading
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    return Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      color: const Color(0xffAD8B19),
+                      child: Column(
+                        children: <Widget>[
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height*0.1,
                           ),
-                        ),
-                        leading: CircleAvatar(
-                          backgroundColor: Colors.white,
-                          child: Icon(
-                            Icons.perm_identity,
-                            color: Colors.black,
+                          ListTile(
+                            title: Text(
+                              _user.name,
+                              style: TextStyle(color: Colors.white, fontSize: MediaQuery.of(context).size.height*0.03, fontWeight: FontWeight.w800),
+                            ),
+                            subtitle: Text(
+                              _user.email,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: MediaQuery.of(context).size.height*0.02,
+                              ),
+                            ),
+                            leading: CircleAvatar(
+                                radius: 25.0,
+                                backgroundImage:
+                                NetworkImage(_user.photoURL)
+                            )
                           ),
-                          radius: 40,
-                        ),
+                          Divider(
+                            height: 50,
+                            thickness: 0.5,
+                            color: Colors.white.withOpacity(0.3),
+                            indent: 32,
+                            endIndent: 32,
+                          ),
+                          MenuItem(
+                            icon: Icons.cached_rounded,
+                            title:"Recientes",
+                            onTap: () {
+                              onIconPressed();
+                              BlocProvider.of<NavigationBloc>(context).add(NavigationEvents.userResumeClickedEvent);
+                            },
+                          ),
+                          MenuItem(
+                            icon: Icons.home,
+                            title: "Inicio",
+                            onTap: () {
+                              onIconPressed();
+                              BlocProvider.of<NavigationBloc>(context).add(NavigationEvents.homeScreenClickedEvent);
+                            },
+                          ),
+                          MenuItem(
+                            icon: Icons.person,
+                            title: "Perfil",
+                            onTap: ()  {
+                              onIconPressed();
+                              BlocProvider.of<NavigationBloc>(context).add(NavigationEvents.userProfileClickedEvent);
+                            },
+                          ),
+                          MenuItem(
+                            icon: Icons.question_answer,
+                            title: "Preguntas Frecuentes",
+                            onTap: () {
+                              onIconPressed();
+                              BlocProvider.of<NavigationBloc>(context).add(NavigationEvents.faqUsersClickedEvent);
+                            },
+                          ),
+                          Divider(
+                            height: 10,
+                            thickness: 0.5,
+                            color: Colors.white.withOpacity(0.3),
+                            indent: 32,
+                            endIndent: 32,
+                          ),
+                          MenuItem(
+                            icon: Icons.exit_to_app,
+                            title: "Logout",
+                            onTap: () {
+                              userBloc.signOut();
+                              Navigator.push(
+                                  context,
+                                  PageTransition(child: SignInScreen(), type: PageTransitionType.rightToLeft));
+                            },
+                          ),
+                        ],
                       ),
-                      Divider(
-                        height: 50,
-                        thickness: 0.5,
-                        color: Colors.white.withOpacity(0.3),
-                        indent: 32,
-                        endIndent: 32,
-                      ),
-                      MenuItem(
-                        icon: Icons.cached_rounded,
-                        title:"Recientes",
-                        onTap: () {
-                          onIconPressed();
-                          BlocProvider.of<NavigationBloc>(context).add(NavigationEvents.UserResumeClickedEvent);
-                        },
-                      ),
-                      MenuItem(
-                        icon: Icons.home,
-                        title: "Inicio",
-                        onTap: () {
-                          onIconPressed();
-                          BlocProvider.of<NavigationBloc>(context).add(NavigationEvents.HomeScreenClickedEvent);
-                        },
-                      ),
-                      MenuItem(
-                        icon: Icons.person,
-                        title: "Perfil",
-                        onTap: ()  {
-                          onIconPressed();
-                          BlocProvider.of<NavigationBloc>(context).add(NavigationEvents.user_profileClickedEvent);
-                        },
-                      ),
-                      MenuItem(
-                        icon: Icons.question_answer,
-                        title: "Preguntas Frecuentes",
-                        onTap: () {
-                          onIconPressed();
-                          BlocProvider.of<NavigationBloc>(context).add(NavigationEvents.faq_usersClickedEvent);
-                        },
-                      ),
-                      Divider(
-                        height: 10,
-                        thickness: 0.5,
-                        color: Colors.white.withOpacity(0.3),
-                        indent: 32,
-                        endIndent: 32,
-                      ),
-                      MenuItem(
-                        icon: Icons.exit_to_app,
-                        title: "Logout",
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              PageTransition(child: SignInScreen(), type: PageTransitionType.rightToLeft));
-
-                        },
-                      ),
-                    ],
-                  ),
+                    );
+                  }
                 ),
               ),
               Align(
-                alignment: Alignment(0, -0.9),
+                alignment: const Alignment(0, -0.9),
                 child: GestureDetector(
                   onTap: () {
                     onIconPressed();
@@ -173,7 +188,7 @@ class _SideBarState extends State<SideBar> with SingleTickerProviderStateMixin<S
                     child: Container(
                       width: 45,
                       height: 110,
-                      color: Color(0xffAD8B19),
+                      color: const Color(0xffAD8B19),
                       alignment: Alignment.centerLeft,
                       child: AnimatedIcon(
                         progress: _animationController.view,

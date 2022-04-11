@@ -1,6 +1,7 @@
 // @dart=2.9
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:after_app/Users/model/user.dart' as us;
 // import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 // import 'package:http/http.dart' as http;
 // import 'dart:convert' as Json;
@@ -10,14 +11,6 @@ class FirebaseAuthAPI {
   final GoogleSignIn googleSignIn = GoogleSignIn();
   // final FacebookLogin  facebookLogin= FacebookLogin();
 
-  User _user;
-  User currentUser() => _user;
-
-  void login() async {
-    _user = await signIn();
-
-  }
-
   Future<User> signIn() async {
     GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
     GoogleSignInAuthentication gSA = await googleSignInAccount.authentication;
@@ -26,9 +19,11 @@ class FirebaseAuthAPI {
       accessToken: gSA.accessToken,
       idToken: gSA.idToken,
     );
-
-    return (await _auth.signInWithCredential(credential)) as User;
+    final User user = (await _auth.signInWithCredential(credential)).user;
+    return user;
   }
+
+
   Future<User> facebookSignIn() async {
     // final resultFb = await facebookLogin.logIn(['email']);
     //
@@ -73,11 +68,10 @@ class FirebaseAuthAPI {
     }
   }
 
-
-  Future <User> getuserdatatocreate() async{
-    return await currentUser();
+  // get current User data
+  User getCurrentUser() {
+    return _auth.currentUser;
   }
-
 
   Future <User> signInWithEmailAndPassword(String email, String password) async{
     //cont=1;
@@ -92,11 +86,9 @@ class FirebaseAuthAPI {
     }
   }
 
-
-  signOut() async {
+  void signOut() async {
     await googleSignIn.signOut();
-    await _auth.signOut().then((onvalue) => print("Sesion cerrada"));
-    // googleSignIn.signOut();
+    await _auth.signOut();
     // facebookLogin.logOut();
     print(("sesiones cerradas"));
 }

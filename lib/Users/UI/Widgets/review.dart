@@ -17,7 +17,7 @@ class Review extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
    return StreamBuilder<User>(
-      stream: CloudFirestoreAPI(uid: autoruid).userData,
+      stream: CloudFirestoreAPI().userData,
       builder: (BuildContext context, AsyncSnapshot snapshot){
         if (!snapshot.hasData) {
           return Center(
