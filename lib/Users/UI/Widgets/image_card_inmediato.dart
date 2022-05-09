@@ -7,74 +7,72 @@ import 'package:page_transition/page_transition.dart';
 //import 'barbers_user.dart';
 class ImageCardInmediato extends StatelessWidget {
   String buttonText;
-  String image="asset/images/background.jpg";
+  String image = "asset/images/background.jpg";
   MyPreferences _myPreferences = MyPreferences();
-  ImageCardInmediato(this.image,this.buttonText);
+  ImageCardInmediato(this.image, this.buttonText);
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    final card= GestureDetector(
+    final card = GestureDetector(
         onTap: () {
           _myPreferences.servicio = "inmediato";
           _myPreferences.commit();
           Navigator.push(
-            context,
-            PageTransition(child: Inmediato(), type: PageTransitionType.rightToLeft));},
-        child:Container(
+              context,
+              PageTransition(
+                  child: Inmediato(), type: PageTransitionType.rightToLeft));
+        },
+        child: Container(
             margin: const EdgeInsets.only(top: 10.0, bottom: 10.0),
             height: 190.0,
             width: 400.0,
             decoration: BoxDecoration(
                 image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: AssetImage(image)
-                ),
+                    fit: BoxFit.cover, image: AssetImage(image)),
                 borderRadius: BorderRadius.all(Radius.circular((30.0))),
                 shape: BoxShape.rectangle,
                 boxShadow: <BoxShadow>[
-                  BoxShadow(
+                  const BoxShadow(
                       color: Colors.black38,
                       blurRadius: 15.0,
-                      offset: Offset(0.0, 0.7))]
-            )
-        ));
-    final button= GestureDetector(
+                      offset: Offset(0.0, 0.7))
+                ])));
+    final button = GestureDetector(
       onTap: () {
         Navigator.push(
             context,
-            PageTransition(child: Inmediato(), type: PageTransitionType.rightToLeft));},
+            PageTransition(
+                child: Inmediato(), type: PageTransitionType.rightToLeft));
+      },
       child: Container(
-        margin: EdgeInsets.only(top:145.0),
-
-        height: 45.0 ,
+        margin: EdgeInsets.only(top: 145.0),
+        height: 45.0,
         width: 400.0,
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.only(topLeft: Radius.circular(0.0),topRight: Radius.circular(0.0),bottomRight: Radius.circular(30.0),bottomLeft: Radius.circular(30.0)),
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(0.0),
+                topRight: Radius.circular(0.0),
+                bottomRight: Radius.circular(30.0),
+                bottomLeft: Radius.circular(30.0)),
             color: Color(0xffAD8B19).withOpacity(0.7),
             boxShadow: <BoxShadow>[
               BoxShadow(
                   color: Colors.black38,
                   blurRadius: 15.0,
-                  offset: Offset(0.0, 0.7))]
-        ),
-
+                  offset: Offset(0.0, 0.7))
+            ]),
         child: Center(
           child: Text(
             buttonText,
             style: TextStyle(
-                fontSize: 25.0,
-                fontFamily: "Lato",
-                color: Colors.white
-            ),
-
+                fontSize: 25.0, fontFamily: "Lato", color: Colors.white),
           ),
-
         ),
       ),
     );
 
     return Stack(
-      alignment: Alignment(0.3,0),
+      alignment: Alignment(0.3, 0),
       children: <Widget>[
         card,
         button,
@@ -84,5 +82,4 @@ class ImageCardInmediato extends StatelessWidget {
       ],
     );
   }
-
 }

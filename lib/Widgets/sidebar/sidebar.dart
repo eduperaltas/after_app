@@ -14,7 +14,6 @@ import '../MyPreferences.dart';
 import 'menu_item.dart';
 import 'navigation_bloc.dart';
 
-
 //import 'package:generic_bloc_provider/generic_bloc_provider.dart';
 class SideBar extends StatefulWidget {
   @override
@@ -22,7 +21,8 @@ class SideBar extends StatefulWidget {
   UserBloc userBloc;
 }
 
-class _SideBarState extends State<SideBar> with SingleTickerProviderStateMixin<SideBar> {
+class _SideBarState extends State<SideBar>
+    with SingleTickerProviderStateMixin<SideBar> {
   UserBloc userBloc;
   User _user;
   FirebaseAuthAPI fAuth;
@@ -36,7 +36,8 @@ class _SideBarState extends State<SideBar> with SingleTickerProviderStateMixin<S
   @override
   void initState() {
     super.initState();
-    _animationController = AnimationController(vsync: this, duration: _animationDuration);
+    _animationController =
+        AnimationController(vsync: this, duration: _animationDuration);
     isSidebarOpenedStreamController = PublishSubject<bool>();
     isSidebarOpenedStream = isSidebarOpenedStreamController.stream;
     isSidebarOpenedSink = isSidebarOpenedStreamController.sink;
@@ -80,105 +81,115 @@ class _SideBarState extends State<SideBar> with SingleTickerProviderStateMixin<S
             children: <Widget>[
               Expanded(
                 child: StreamBuilder(
-                  stream: CloudFirestoreAPI().userData,
-                  builder: (context,AsyncSnapshot snapshot) {
-                    _user = snapshot.data;
-                    if(!snapshot.hasData){
-                    //  Loading
-                      return const Center(
-                        child: CircularProgressIndicator(),
+                    stream: CloudFirestoreAPI().userData,
+                    builder: (context, AsyncSnapshot snapshot) {
+                      _user = snapshot.data;
+                      if (!snapshot.hasData) {
+                        //  Loading
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                      return Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        color: const Color(0xffAD8B19),
+                        child: Column(
+                          children: <Widget>[
+                            SizedBox(
+                              height: MediaQuery.of(context).size.height * 0.1,
+                            ),
+                            ListTile(
+                                title: Text(
+                                  _user.name,
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize:
+                                          MediaQuery.of(context).size.height *
+                                              0.03,
+                                      fontWeight: FontWeight.w800),
+                                ),
+                                subtitle: Text(
+                                  _user.email,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize:
+                                        MediaQuery.of(context).size.height *
+                                            0.02,
+                                  ),
+                                ),
+                                leading: CircleAvatar(
+                                    radius: 25.0,
+                                    backgroundImage:
+                                        NetworkImage(_user.photoURL))),
+                            Divider(
+                              height: 50,
+                              thickness: 0.5,
+                              color: Colors.white.withOpacity(0.3),
+                              indent: 32,
+                              endIndent: 32,
+                            ),
+                            MenuItem(
+                              icon: Icons.cached_rounded,
+                              title: "Recientes",
+                              onTap: () {
+                                onIconPressed();
+                                BlocProvider.of<NavigationBloc>(context).add(
+                                    NavigationEvents.userResumeClickedEvent);
+                              },
+                            ),
+                            MenuItem(
+                              icon: Icons.home,
+                              title: "Inicio",
+                              onTap: () {
+                                onIconPressed();
+                                BlocProvider.of<NavigationBloc>(context).add(
+                                    NavigationEvents.homeScreenClickedEvent);
+                              },
+                            ),
+                            MenuItem(
+                              icon: Icons.person,
+                              title: "Perfil",
+                              onTap: () {
+                                onIconPressed();
+                                BlocProvider.of<NavigationBloc>(context).add(
+                                    NavigationEvents.userProfileClickedEvent);
+                              },
+                            ),
+                            MenuItem(
+                              icon: Icons.question_answer,
+                              title: "Preguntas Frecuentes",
+                              onTap: () {
+                                onIconPressed();
+                                BlocProvider.of<NavigationBloc>(context)
+                                    .add(NavigationEvents.faqUsersClickedEvent);
+                              },
+                            ),
+                            Divider(
+                              height: 10,
+                              thickness: 0.5,
+                              color: Colors.white.withOpacity(0.3),
+                              indent: 32,
+                              endIndent: 32,
+                            ),
+                            MenuItem(
+                              icon: Icons.exit_to_app,
+                              title: "Logout",
+                              onTap: () {
+                                userBloc.signOut();
+                                Navigator.push(
+                                    context,
+                                    PageTransition(
+                                        child: SignInScreen(),
+                                        type: PageTransitionType.rightToLeft));
+                              },
+                            ),
+                          ],
+                        ),
                       );
-                    }
-                    return Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      color: const Color(0xffAD8B19),
-                      child: Column(
-                        children: <Widget>[
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height*0.1,
-                          ),
-                          ListTile(
-                            title: Text(
-                              _user.name,
-                              style: TextStyle(color: Colors.white, fontSize: MediaQuery.of(context).size.height*0.03, fontWeight: FontWeight.w800),
-                            ),
-                            subtitle: Text(
-                              _user.email,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: MediaQuery.of(context).size.height*0.02,
-                              ),
-                            ),
-                            leading: CircleAvatar(
-                                radius: 25.0,
-                                backgroundImage:
-                                NetworkImage(_user.photoURL)
-                            )
-                          ),
-                          Divider(
-                            height: 50,
-                            thickness: 0.5,
-                            color: Colors.white.withOpacity(0.3),
-                            indent: 32,
-                            endIndent: 32,
-                          ),
-                          MenuItem(
-                            icon: Icons.cached_rounded,
-                            title:"Recientes",
-                            onTap: () {
-                              onIconPressed();
-                              BlocProvider.of<NavigationBloc>(context).add(NavigationEvents.userResumeClickedEvent);
-                            },
-                          ),
-                          MenuItem(
-                            icon: Icons.home,
-                            title: "Inicio",
-                            onTap: () {
-                              onIconPressed();
-                              BlocProvider.of<NavigationBloc>(context).add(NavigationEvents.homeScreenClickedEvent);
-                            },
-                          ),
-                          MenuItem(
-                            icon: Icons.person,
-                            title: "Perfil",
-                            onTap: ()  {
-                              onIconPressed();
-                              BlocProvider.of<NavigationBloc>(context).add(NavigationEvents.userProfileClickedEvent);
-                            },
-                          ),
-                          MenuItem(
-                            icon: Icons.question_answer,
-                            title: "Preguntas Frecuentes",
-                            onTap: () {
-                              onIconPressed();
-                              BlocProvider.of<NavigationBloc>(context).add(NavigationEvents.faqUsersClickedEvent);
-                            },
-                          ),
-                          Divider(
-                            height: 10,
-                            thickness: 0.5,
-                            color: Colors.white.withOpacity(0.3),
-                            indent: 32,
-                            endIndent: 32,
-                          ),
-                          MenuItem(
-                            icon: Icons.exit_to_app,
-                            title: "Logout",
-                            onTap: () {
-                              userBloc.signOut();
-                              Navigator.push(
-                                  context,
-                                  PageTransition(child: SignInScreen(), type: PageTransitionType.rightToLeft));
-                            },
-                          ),
-                        ],
-                      ),
-                    );
-                  }
-                ),
+                    }),
               ),
               Align(
-                alignment: const Alignment(0, -0.9),
+                alignment: const Alignment(0, -1),
                 child: GestureDetector(
                   onTap: () {
                     onIconPressed();

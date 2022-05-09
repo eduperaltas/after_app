@@ -6,156 +6,96 @@ import 'package:after_app/Widgets/MyPreferences.dart';
 import 'package:after_app/Widgets/add_credit_card/add_credit_card_view.dart';
 import 'package:flutter/material.dart';
 
+import '../styles/colors.dart';
+import '../styles/colors.dart';
+
 class CreditCardsPago extends StatelessWidget {
-  MyPreferences _myPreferences = MyPreferences();
+  final MyPreferences _myPreferences = MyPreferences();
+
+  CreditCardsPago({Key key}) : super(key: key);
 
 
   @override
   Widget build(BuildContext context) {
     int precio;
-    print("Tipo de servicio: "+_myPreferences.servicio);
-    return SingleChildScrollView(
-      child: Container(
-          padding: const EdgeInsets.all(8.0),
-          child:GestureDetector(
-            onTap: (){
-              if(_myPreferences.corte=='Especial Barbers'){
-                precio=45;
+    // print("Tipo de servicio: "+_myPreferences.servicio);
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.white,
+        centerTitle: true,
+        title: Padding(
+          padding: const EdgeInsets.only(left: 45.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: const [
+              CircleAvatar(
+                backgroundImage: AssetImage('assets/images/Barba.png'),
+                radius: 26,
+                backgroundColor: Colors.transparent,
+              ),
+              Text('BARBERS  HOME', style:
+              TextStyle(
+                color: Color(0xff222B45),
+                fontWeight: FontWeight.w800,
+                fontFamily: "The Foregen Rough One",
+              ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.only(top: 10.0),
+        child: GestureDetector(
+          // onTap: (){
+          //   if(_myPreferences.corte=='Especial Barbers'){
+          //     precio=45;
+          //   }
+          //   if(_myPreferences.corte=='Corte clasico'){
+          //     precio=35;
+          //   }
+          //   if(_myPreferences.corte=='Corte simple'){
+          //     precio=30;
+          //   }
+          //   CloudFirestoreAPI().createServicesDocument(_myPreferences.latitude,_myPreferences.longitude,_myPreferences.direction,_myPreferences.servicio,_myPreferences.barber, _myPreferences.corte,precio,_myPreferences.fecha,_myPreferences.hora);
+          //   _myPreferences.commit();
+          //   Navigator.push(
+          //       context,
+          //       MaterialPageRoute(builder: (context) => ConfirmationScreen()));
+          //
+          //   _myPreferences.direction ="";
+          //   _myPreferences.latitude = "";
+          //   _myPreferences.longitude ="";
+          //   _myPreferences.commit();
+          // },
+          child: StreamBuilder<Object>(
+              stream: CloudFirestoreAPI().cards,
+              builder: (BuildContext context,AsyncSnapshot snapshot) {
+                List<CardModel> lstCards = snapshot.data;
+                return lstCards.isEmpty ? Center(
+                    child:Column(
+                      children: <Widget> [
+                        const Text("Agrega una nueva tarjeta en el boton +"),
+                        _buildAddCardButton(
+                            icon: const Icon(Icons.add,
+                              color: Colors.white,),
+                            color: lprimaryColor,
+                            context: context
+                        ),
+                      ],
+                    )
+                ) :
+                  ListView.builder(
+                    padding: const EdgeInsets.all(20.0),
+                    shrinkWrap: true,
+                    itemCount: lstCards.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return _buildCreditCard(tarjetas: lstCards[0]);
+                    });
               }
-              if(_myPreferences.corte=='Corte clasico'){
-                precio=35;
-              }
-              if(_myPreferences.corte=='Corte simple'){
-                precio=30;
-              }
-              CloudFirestoreAPI().createServicesDocument(_myPreferences.latitude,_myPreferences.longitude,_myPreferences.direction,_myPreferences.servicio,_myPreferences.barber, _myPreferences.corte,precio,_myPreferences.fecha,_myPreferences.hora);
-              _myPreferences.commit();
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ConfirmationScreen()));
-
-              _myPreferences.direction ="";
-              _myPreferences.latitude = "";
-              _myPreferences.longitude ="";
-              _myPreferences.commit();
-            },
-
-            child: StreamBuilder<Object>(
-                stream: CloudFirestoreAPI().cards,
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData ) {
-                    print("No tiene tarjetas");
-                    return Center(
-                        child:Column(
-                          children: <Widget> [
-                            Text("Agrega una nueva tarjeta en el boton +"),
-                            _buildAddCardButton(
-                                icon: Icon(Icons.add,
-                                  color: Colors.white,),
-                                color: Colors.black,
-                                context: context
-                            ),
-                          ],
-                        )
-                    );
-                    // <---- no return here
-                  } else {
-                    print("tiene tarjetas");
-                    final List <CardModel> tarjetas = snapshot.data;
-                    print("tiene  "+ tarjetas.length.toString() +"   tarjetas");
-
-                    if(tarjetas.length == 0){
-                      print("No tiene tarjetas");
-                      return Center(
-                          child:Column(
-                            children: <Widget> [
-                              Text("Agrega una nueva tarjeta en el boton +"),
-                              _buildAddCardButton(
-                                  icon: Icon(Icons.add,
-                                    color: Colors.white,),
-                                  color: Colors.black,
-                                  context: context
-                              ),
-                            ],
-                          )
-                      );
-                    }
-
-                    if(tarjetas.length == 1){
-                      return SingleChildScrollView(
-                        child: Container(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-
-                              _buildCreditCard(tarjetas: tarjetas[0]),
-
-                            ],
-                          ),
-                        ),
-                      );
-                    }
-
-                    if(tarjetas.length == 2 ){
-                      return SingleChildScrollView(
-                        child: Container(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-
-                              _buildCreditCard(tarjetas: tarjetas[0]),
-                              _buildCreditCard(tarjetas: tarjetas[1]),
-
-                            ],
-                          ),
-                        ),
-                      );
-                    }
-
-                    if(tarjetas.length == 3 ){
-                      return SingleChildScrollView(
-                        child: Container(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-
-                              _buildCreditCard(tarjetas: tarjetas[0]),
-                              _buildCreditCard(tarjetas: tarjetas[1]),
-                              _buildCreditCard(tarjetas: tarjetas[2]),
-
-                            ],
-                          ),
-                        ),
-                      );
-                    }
-
-                    if(tarjetas.length == 4 ){
-                      return SingleChildScrollView(
-                        child: Container(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-
-                              _buildCreditCard(tarjetas: tarjetas[0]),
-                              _buildCreditCard(tarjetas: tarjetas[1]),
-                              _buildCreditCard(tarjetas: tarjetas[2]),
-                              _buildCreditCard(tarjetas: tarjetas[3]),
-
-                            ],
-                          ),
-                        ),
-                      );
-                    }
-
-                  }
-                }
-            ),)
-
-
+          ),
+        ),
       ),
     );
   }
@@ -188,7 +128,7 @@ class CreditCardsPago extends StatelessWidget {
 
     return Card(
       elevation: 4.0,
-      color: Colors.white54,
+      color: lprimaryColor,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(14),
       ),
@@ -207,7 +147,7 @@ class CreditCardsPago extends StatelessWidget {
               padding: const EdgeInsets.only(top: 16.0),
               child: Text(
                 tarjetas.cardNumber,
-                style: TextStyle(
+                style: const TextStyle(
                     color: Colors.white,
                     fontSize: 21,
                     fontFamily: 'CourrierPrime'),
@@ -261,7 +201,7 @@ class CreditCardsPago extends StatelessWidget {
         Text(
           '$label',
           style: TextStyle(
-              color: Colors.grey, fontSize: 9, fontWeight: FontWeight.bold),
+              color: Colors.white54, fontSize: 9, fontWeight: FontWeight.bold),
         ),
         Text(
           '$value',

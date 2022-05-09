@@ -1,4 +1,5 @@
 // @dart=2.9
+import 'package:after_app/Users/UI/Widgets/maps/search/search_place.dart';
 import 'package:after_app/Widgets/MyPreferences.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -41,106 +42,102 @@ class _MyDetailPageInmediate extends State<MyDetailPageInmediate> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Container(
-              child:Image.asset(
+              child: Image.asset(
                 'assets/images/Barba.png',
                 height: 90,
-              ),),
+              ),
+            ),
             Flexible(
-              child: Container(
+              child: SizedBox(
                 width: MediaQuery.of(context).size.width,
-                child: Text(superHero2.title, style:
-                TextStyle(
-                  color: Color(0xff222B45),
-                  fontWeight: FontWeight.w900,
-                  fontFamily: "The Foregen Rough One",
-                  fontSize: 27.0,
-                ),
+                child: Text(
+                  superHero2.title,
+                  style: const TextStyle(
+                    color: Color(0xff222B45),
+                    fontWeight: FontWeight.w900,
+                    fontFamily: "The Foregen Rough One",
+                    fontSize: 27.0,
+                  ),
                 ),
               ),
             )
           ],
-        ),),
+        ),
+      ),
       body: Center(
           child: SingleChildScrollView(
               child: Container(
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: <Widget>[
-                      Hero(
-                        transitionOnUserGestures: true,
-                        tag: superHero2,
-                        child: Transform.scale(
-                            scale: 2.0,
-                            child: Container(
-                                height: 260.0,
-                                width: 300,
-                                margin: EdgeInsets.only(top: 30.0),
-                                decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                        fit: BoxFit.cover,
-                                        image: AssetImage(superHero2.img)
-                                    ),
-                                    borderRadius: BorderRadius.all(Radius.circular((10.0))),
-                                    shape: BoxShape.rectangle,
-                                    boxShadow: <BoxShadow>[
-                                      BoxShadow(
-                                          color: Colors.black38,
-                                          blurRadius: 15.0,
-                                          offset: Offset(0.0, 0.7))]
-                                )
-                            )
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: <Widget>[
+          Hero(
+            transitionOnUserGestures: true,
+            tag: superHero2,
+            child: Transform.scale(
+                scale: 2.0,
+                child: Container(
+                    height: 260.0,
+                    width: 300,
+                    margin: EdgeInsets.only(top: 30.0),
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image: AssetImage(superHero2.img)),
+                        borderRadius: BorderRadius.all(Radius.circular((10.0))),
+                        shape: BoxShape.rectangle,
+                        boxShadow: <BoxShadow>[
+                          BoxShadow(
+                              color: Colors.black38,
+                              blurRadius: 15.0,
+                              offset: Offset(0.0, 0.7))
+                        ]))),
+          ),
+          Card(
+              elevation: 8,
+              margin: EdgeInsets.all(16),
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    padding: EdgeInsets.all(16),
+                    child: Text(superHero2.body,
+                        style: TextStyle(
+                            fontFamily: "BAHNSCHRIFT", fontSize: 18.0)),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      _myPreferences.corte = superHero2.title;
+                      Navigator.push(
+                          context,
+                          PageTransition(
+                              child: const SearchMap(
+                                editFav: false,
+                              ),
+                              type: PageTransitionType.rightToLeft));
+                    },
+                    child: Container(
+                      margin: EdgeInsets.all(30),
+                      height: 50.0,
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30.0),
+                          color: Color(0xffAD8B19)),
+                      child: const Center(
+                        child: Text(
+                          "Continuar",
+                          style: TextStyle(
+                              fontSize: 18.0,
+                              fontFamily: "BAHNSCHRIFT",
+                              color: Colors.white),
                         ),
                       ),
-
-                      Card(
-                          elevation: 8,
-                          margin: EdgeInsets.all(16),
-                          child: Column(
-                            children: <Widget>[
-                              Container(
-                                padding: EdgeInsets.all(16),
-                                child: Text(superHero2.body,
-                                    style: TextStyle(
-                                        fontFamily: "BAHNSCHRIFT",
-                                        fontSize: 18.0
-                                    )),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  _myPreferences.corte = superHero2.title;
-                                  Navigator.push(
-                                      context,
-                                      PageTransition(child: FirstView(), type: PageTransitionType.rightToLeft));
-                                },
-                                child: Container(
-                                  margin: EdgeInsets.all(30
-                                  ),
-                                  height: 50.0 ,
-                                  width: MediaQuery.of(context).size.width,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(30.0),
-                                      color: Color(0xffAD8B19)
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      "Continuar",
-                                      style: TextStyle(
-                                          fontSize: 18.0,
-                                          fontFamily: "BAHNSCHRIFT",
-                                          color: Colors.white
-                                      ),
-
-                                    ),
-
-                                  ),
-                                ),)
-                            ],//Container(
-                            //padding: EdgeInsets.all(16),
-                            //child: Text(superHero.body),
-                          )
-                      )
-                    ],
-                  )))),
+                    ),
+                  )
+                ], //Container(
+                //padding: EdgeInsets.all(16),
+                //child: Text(superHero.body),
+              ))
+        ],
+      )))),
     );
   }
 }

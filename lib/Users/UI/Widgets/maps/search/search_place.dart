@@ -6,18 +6,14 @@ import 'package:flutter/material.dart';
 import '../../../../../Widgets/styles/colors.dart';
 import '../../../../repository/cloud_firestore_api.dart';
 
-
 class SearchMap extends StatefulWidget {
-
   final bool editFav;
 
-  const SearchMap({Key key,this.editFav}) : super(key: key);
+  const SearchMap({Key key, this.editFav}) : super(key: key);
 
   @override
   _SearchMapState createState() => _SearchMapState();
-
 }
-
 
 class _SearchMapState extends State<SearchMap> {
   final TextEditingController _searchAddresController = TextEditingController();
@@ -27,27 +23,28 @@ class _SearchMapState extends State<SearchMap> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          elevation: 0,
-          backgroundColor: Colors.white,
-          centerTitle: true,
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              CircleAvatar(
-                backgroundImage: AssetImage('assets/images/Barba.png'),
-                radius: 26,
-                backgroundColor: Colors.transparent,
+        elevation: 0,
+        backgroundColor: Colors.white,
+        centerTitle: true,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            CircleAvatar(
+              backgroundImage: AssetImage('assets/images/Barba.png'),
+              radius: 26,
+              backgroundColor: Colors.transparent,
+            ),
+            Text(
+              'BARBERS  HOME',
+              style: TextStyle(
+                color: Color(0xff222B45),
+                fontWeight: FontWeight.w800,
+                fontFamily: "The Foregen Rough One",
+                // fontSize: MediaQuery.of(context).size.height*0.05,
               ),
-              Text('BARBERS  HOME', style:
-                TextStyle(
-                  color: Color(0xff222B45),
-                  fontWeight: FontWeight.w800,
-                  fontFamily: "The Foregen Rough One",
-                  // fontSize: MediaQuery.of(context).size.height*0.05,
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -68,7 +65,7 @@ class _SearchMapState extends State<SearchMap> {
               child: Padding(
                 padding: const EdgeInsets.only(left: 50, right: 40, bottom: 10),
                 child: SizedBox(
-                  height: MediaQuery.of(context).size.height*0.06,
+                  height: MediaQuery.of(context).size.height * 0.06,
                   child: TextField(
                     controller: _searchAddresController,
                     decoration: InputDecoration(
@@ -80,19 +77,19 @@ class _SearchMapState extends State<SearchMap> {
                       hintText: '¿A dónde vamos?',
                       hintStyle: TextStyle(
                         color: Colors.black38,
-                        fontSize: MediaQuery.of(context).size.height*0.02,
+                        fontSize: MediaQuery.of(context).size.height * 0.02,
                       ),
                     ),
-                    // onChanged: (value){
-                    //   // print(value);
-                    //   // MapsService().getPlaces(_searchAddresController.text);
-                    //   // _searchAddresController.text = value;
-                    // },
+                    onChanged: (value) {
+                      // print(value);
+                      // MapsService().getPlaces(_searchAddresController.text);
+                      // _searchAddresController.text = value;
+                    },
                   ),
                 ),
               ),
             ),
-            iconAndText(Icons.star,'Favoritos',3),
+            iconAndText(Icons.star, 'Favoritos', 3),
             placeslist()
             //Resultados
           ],
@@ -101,9 +98,9 @@ class _SearchMapState extends State<SearchMap> {
     );
   }
 
-  Widget iconAndText(IconData icon,String text, double strkDivider){
+  Widget iconAndText(IconData icon, String text, double strkDivider) {
     return Container(
-      margin: const EdgeInsets.only(top: 10,left: 20),
+      margin: const EdgeInsets.only(top: 10, left: 20),
       child: Column(
         children: [
           Row(
@@ -112,33 +109,45 @@ class _SearchMapState extends State<SearchMap> {
               //circle icon
               Padding(
                 padding: const EdgeInsets.only(right: 15),
-                child: CircleAvatar(child: Icon(icon, color: Colors.white,size: 20,), radius: 15, backgroundColor: Colors.grey),
+                child: CircleAvatar(
+                    child: Icon(
+                      icon,
+                      color: Colors.white,
+                      size: 20,
+                    ),
+                    radius: 15,
+                    backgroundColor: Colors.grey),
               ),
               //text
               Expanded(
-                child: Text(text, style: const TextStyle(
-                  color: Color(0xff222B45),
-                  fontSize: 16,
-                ),maxLines: 2),
+                child: Text(text,
+                    style: const TextStyle(
+                      color: Color(0xff222B45),
+                      fontSize: 16,
+                    ),
+                    maxLines: 2),
               ),
             ],
           ),
-          Divider( color: Colors.grey, thickness:strkDivider),
+          Divider(color: Colors.grey, thickness: strkDivider),
         ],
       ),
     );
   }
 
-  loading(String text)  {
+  loading(String text) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const CircularProgressIndicator( color: Colors.black),
-          Text(text, style: const TextStyle(
-            color: Color(0xff222B45),
-            fontSize: 16,
-          ),),
+          const CircularProgressIndicator(color: Colors.black),
+          Text(
+            text,
+            style: const TextStyle(
+              color: Color(0xff222B45),
+              fontSize: 16,
+            ),
+          ),
         ],
       ),
     );
@@ -154,13 +163,19 @@ class _SearchMapState extends State<SearchMap> {
               scrollDirection: Axis.vertical,
               shrinkWrap: true,
               itemCount: placeslst.length,
-              itemBuilder: (BuildContext context, int index){
+              itemBuilder: (BuildContext context, int index) {
                 return GestureDetector(
-                  onTap: (){
-                    widget.editFav? _displayDialogFavorito(placeslst[index])
-                        :Navigator.push(context, MaterialPageRoute(builder: (context) => MapScreen(place: placeslst[index])));
-                  },
-                    child: iconAndText(Icons.place, placeslst[index].description,1));
+                    onTap: () {
+                      widget.editFav
+                          ? _displayDialogFavorito(placeslst[index])
+                          : Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      MapScreen(place: placeslst[index])));
+                    },
+                    child: iconAndText(
+                        Icons.place, placeslst[index].description, 1));
               },
             );
           } else {
@@ -168,7 +183,6 @@ class _SearchMapState extends State<SearchMap> {
           }
         });
   }
-
 
   _displayDialogFavorito(Place _place) async {
     await showDialog(
@@ -182,7 +196,7 @@ class _SearchMapState extends State<SearchMap> {
                 padding: const EdgeInsets.all(8.0),
                 child: TextField(
                   controller: _favoriteController,
-                  decoration:  InputDecoration(
+                  decoration: InputDecoration(
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: lprimaryColor, width: 2.0),
                     ),
@@ -192,28 +206,31 @@ class _SearchMapState extends State<SearchMap> {
                     hintText: 'Ingrese el nombre de la ubicación',
                   ),
                 ),
-        ),
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   ElevatedButton(
-                    onPressed: (){
+                    onPressed: () {
                       Navigator.pop(context);
                     },
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(Colors.red[300]),
+                      backgroundColor:
+                          MaterialStateProperty.all(Colors.red[300]),
                     ),
                     child: const Text('Cancelar'),
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: ElevatedButton(
-                      onPressed: (){
-                        _firestoreAPI.createUseraddress(_place, true, _favoriteController.text);
+                      onPressed: () {
+                        _firestoreAPI.createUseraddress(
+                            _place, true, _favoriteController.text);
                         // Navigator.pop(context);
                       },
                       style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(lprimaryColor),
+                        backgroundColor:
+                            MaterialStateProperty.all(lprimaryColor),
                       ),
                       child: const Text('Agregar'),
                     ),

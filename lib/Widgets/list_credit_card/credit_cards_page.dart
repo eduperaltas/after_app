@@ -2,8 +2,12 @@
 import 'package:after_app/Users/model/card.dart';
 import 'package:after_app/Users/repository/cloud_firestore_api.dart';
 import 'package:after_app/Widgets/add_credit_card/add_credit_card_view.dart';
+import 'package:after_app/Widgets/styles/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+
+import '../styles/colors.dart';
+import '../styles/colors.dart';
 
 class CreditCardsPage extends StatelessWidget {
   String uiduser;
@@ -17,137 +21,37 @@ class CreditCardsPage extends StatelessWidget {
     print("uid cards:" +uiduser);
     return StreamBuilder<Object>(
         stream: CloudFirestoreAPI().cards,
-        builder: (context, snapshot) {
-          if (!snapshot.hasData ) {
-            print("No tiene tarjetas");
-            return Column(
-              children: [
+        builder: (BuildContext context,AsyncSnapshot snapshot) {
+          List<CardModel> lstCards = snapshot.data;
 
-                Center(
-                   child: CircularProgressIndicator(),
-                ),
-              ],
-            ); // <---- no return here
-          } else {
-            print("tiene tarjetas");
-            final List <CardModel> tarjetas = snapshot.data;
-            print("tiene  "+ tarjetas.length.toString() +"   tarjetas");
-
-            if(tarjetas.length == 0){
-              print("No tiene tarjetas");
-              return Center(
+          return Column(
+            children: [
+              lstCards.isEmpty ? Center(
                   child:Column(
                     children: <Widget> [
                       Image.asset("assets/images/noCard.png"),
-                      Text("Agrega una nueva tarjeta en el boton +"),
-                      _buildAddCardButton(
-                          icon: Icon(Icons.add,
-                            color: Colors.white,),
-                          color:  Color(0xffAD8B19),
-                          context: context
-                      ),
                     ],
                   )
-              );
-            }
-
-            if(tarjetas.length == 1){
-              return SingleChildScrollView(
-                child: Container(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-
-                      _buildCreditCard(tarjetas: tarjetas[0],context: context, cardid: tarjetas[0].carduid),
-
-                      _buildAddCardButton(
-                          icon: Icon(Icons.add,
-                            color: Colors.white,),
-                          color: Colors.black,
-                          context: context
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            }
-
-            if(tarjetas.length == 2 ){
-              return SingleChildScrollView(
-                child: Container(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-
-                      _buildCreditCard(tarjetas: tarjetas[0],context: context, cardid: tarjetas[0].carduid),
-                      _buildCreditCard(tarjetas: tarjetas[1],context: context, cardid: tarjetas[1].carduid),
-
-                      _buildAddCardButton(
-                          icon: Icon(Icons.add,
-                            color: Colors.white,),
-                          color: Colors.black,
-                          context: context
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            }
-
-            if(tarjetas.length == 3 ){
-              return SingleChildScrollView(
-                child: Container(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-
-                      _buildCreditCard(tarjetas: tarjetas[0],context: context, cardid: tarjetas[0].carduid),
-                      _buildCreditCard(tarjetas: tarjetas[1],context: context, cardid: tarjetas[1].carduid),
-                      _buildCreditCard(tarjetas: tarjetas[2],context: context, cardid: tarjetas[2].carduid),
-
-                      _buildAddCardButton(
-                          icon: Icon(Icons.add,
-                            color: Colors.white,),
-                          color: Colors.black,
-                          context: context
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            }
-
-            if(tarjetas.length == 4 ){
-              return SingleChildScrollView(
-                child: Container(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-
-                      _buildCreditCard(tarjetas: tarjetas[0],context: context, cardid: tarjetas[0].carduid),
-                      _buildCreditCard(tarjetas: tarjetas[1],context: context, cardid: tarjetas[1].carduid),
-                      _buildCreditCard(tarjetas: tarjetas[2],context: context, cardid: tarjetas[2].carduid),
-                      _buildCreditCard(tarjetas: tarjetas[3],context: context, cardid: tarjetas[3].carduid),
-
-                      _buildAddCardButton(
-                          icon: Icon(Icons.add,
-                            color: Colors.white,),
-                          color: Colors.black,
-                          context: context
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            }
-
-          }
+              ) :
+              ListView.builder(
+                  padding: const EdgeInsets.all(20.0),
+                  shrinkWrap: true,
+                  itemCount: lstCards.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return _buildCreditCard(tarjetas: lstCards[0]);
+                  }),
+              const Text("Agrega una nueva tarjeta en el boton +"),
+              _buildAddCardButton(
+                  icon:const Icon(Icons.add,
+                    color: Colors.white,),
+                  color:  Color(0xffAD8B19),
+                  context: context
+              ),
+            ],
+          );
         }
     );
+
   }
 
   Container _buildAddCardButton({
@@ -178,7 +82,7 @@ class CreditCardsPage extends StatelessWidget {
 
     return Card(
       elevation: 4.0,
-      color: Colors.white70,
+      color: lprimaryColor,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(14),
       ),
@@ -257,14 +161,14 @@ class CreditCardsPage extends StatelessWidget {
           child: Container(
               padding: const EdgeInsets.only(left: 310.0, right: 0, bottom: 27.0, top: 0),
               child: Column(crossAxisAlignment: CrossAxisAlignment.end, mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
+                children: const [
                   CircleAvatar(
                       radius: 15.0,
                       backgroundImage:
                       NetworkImage("https://cdn4.iconfinder.com/data/icons/social-messaging-ui-color-and-shapes-4/177800/175-512.png")
                   )
                 ],
-              )),
+              ) ),
         )
 
       ],)
@@ -297,12 +201,12 @@ class CreditCardsPage extends StatelessWidget {
       children: <Widget>[
         Text(
           '$label',
-          style: TextStyle(
-              color: Colors.grey, fontSize: 9, fontWeight: FontWeight.bold),
+          style: const TextStyle(
+              color: Colors.white54, fontSize: 9, fontWeight: FontWeight.bold),
         ),
         Text(
           '$value',
-          style: TextStyle(
+          style: const TextStyle(
               color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),
         )
       ],

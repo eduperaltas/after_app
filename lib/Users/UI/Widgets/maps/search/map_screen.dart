@@ -2,6 +2,7 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:after_app/Users/model/place_search.dart';
 import 'package:after_app/Users/repository/maps_service.dart';
+import 'package:after_app/Widgets/list_credit_card/credit_cards_pago.dart';
 import 'package:after_app/Widgets/styles/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -72,22 +73,25 @@ class _MapScreenState extends State<MapScreen> {
         elevation: 0,
         backgroundColor: Colors.white,
         centerTitle: true,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            CircleAvatar(
-              backgroundImage: AssetImage('assets/images/Barba.png'),
-              radius: 26,
-              backgroundColor: Colors.transparent,
-            ),
-            Text('BARBERS  HOME', style:
-            TextStyle(
-              color: Color(0xff222B45),
-              fontWeight: FontWeight.w800,
-              fontFamily: "The Foregen Rough One",
-            ),
-            ),
-          ],
+        title: Padding(
+          padding: const EdgeInsets.only(left: 45.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: const [
+              CircleAvatar(
+                backgroundImage: AssetImage('assets/images/Barba.png'),
+                radius: 26,
+                backgroundColor: Colors.transparent,
+              ),
+              Text('BARBERS  HOME', style:
+              TextStyle(
+                color: Color(0xff222B45),
+                fontWeight: FontWeight.w800,
+                fontFamily: "The Foregen Rough One",
+              ),
+              ),
+            ],
+          ),
         ),
       ),
       body: _place.lat!=null && pinLocationIcon!=null? Column(
@@ -179,8 +183,10 @@ class _MapScreenState extends State<MapScreen> {
             child: ElevatedButton(
                 onPressed: () {
                   _isSelected.contains(true)?
-                      null
-                      : null;
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => CreditCardsPago()),
+                    ): null;
                 },
                 style: ButtonStyle(
                   backgroundColor: _isSelected.contains(true)? MaterialStateProperty.all(lprimaryColor) : MaterialStateProperty.all(Colors.grey),

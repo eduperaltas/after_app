@@ -9,6 +9,7 @@ class MapsService {
   Future<List<Place>> getPlaces(String place) async {
     var url = 'https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$place&key=$key&components=country:PE';
     var response = await http.get(Uri.parse(url));
+    print('RESPONSE Get Places:'+response.body);
     var json = jsonDecode(response.body);
     var jsonResults = json['predictions'] as List;
     List<Place> places = jsonResults.map((p) => Place.fromJson(p)).toList();
@@ -19,6 +20,7 @@ class MapsService {
     String placeId = place.placeId;
     var url = 'https://maps.googleapis.com/maps/api/place/details/json?place_id=$placeId&key=$key';
     var response = await http.get(Uri.parse(url));
+    print('RESPONSE Get Places Details:'+response.body);
     var json = jsonDecode(response.body);
     var jsonResults = json['result'] as Map;
     place.direction = jsonResults['formatted_address'];
