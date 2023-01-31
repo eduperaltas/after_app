@@ -8,10 +8,8 @@ import 'package:generic_bloc_provider/generic_bloc_provider.dart';
 import 'package:provider/provider.dart';
 import 'Users/bloc/bloc_user.dart';
 import 'Widgets/providers/walkthrough_provider.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'dart:async';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
@@ -31,37 +29,37 @@ class _ApplicationState extends State<Application> {
   // @override
   // void initState() {
   //   super.initState();
-    // _fcm.configure(
-    //   onMessage: (Map<String, dynamic> message) async {
-    //     print("onMessage en app: $message");
-    //
-    //     showDialog(
-    //       context: context,
-    //       builder: (context) => AlertDialog(
-    //         content: ListTile(
-    //           title: Text(message['notification']['title']),
-    //           subtitle: Text(message['notification']['body']),
-    //         ),
-    //         actions: <Widget>[
-    //           FlatButton(
-    //             color: Colors.amber,
-    //             child: Text('Ok'),
-    //             onPressed: () => Navigator.of(context).pop(),
-    //           ),
-    //         ],
-    //       ),
-    //     );
-    //   },
-    //
-    //   onLaunch: (Map<String, dynamic> message) async {
-    //     print("onLaunch: $message");
-    //     // TODO optional
-    //   },
-    //   onResume: (Map<String, dynamic> message) async {
-    //     print("onResume: $message");
-    //     // TODO optional
-    //   },
-    // );
+  // _fcm.configure(
+  //   onMessage: (Map<String, dynamic> message) async {
+  //     print("onMessage en app: $message");
+  //
+  //     showDialog(
+  //       context: context,
+  //       builder: (context) => AlertDialog(
+  //         content: ListTile(
+  //           title: Text(message['notification']['title']),
+  //           subtitle: Text(message['notification']['body']),
+  //         ),
+  //         actions: <Widget>[
+  //           FlatButton(
+  //             color: Colors.amber,
+  //             child: Text('Ok'),
+  //             onPressed: () => Navigator.of(context).pop(),
+  //           ),
+  //         ],
+  //       ),
+  //     );
+  //   },
+  //
+  //   onLaunch: (Map<String, dynamic> message) async {
+  //     print("onLaunch: $message");
+  //     // TODO optional
+  //   },
+  //   onResume: (Map<String, dynamic> message) async {
+  //     print("onResume: $message");
+  //     // TODO optional
+  //   },
+  // );
   // }
 
   // @override
@@ -71,7 +69,7 @@ class _ApplicationState extends State<Application> {
   // }
 
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return BlocProvider<UserBloc>(
         bloc: UserBloc(),
         child: MaterialApp(
@@ -85,10 +83,10 @@ class _ApplicationState extends State<Application> {
                   onGenerateRoute: onGenerateRoute,
                   theme: ThemeScheme.light(),
                   initialRoute: StartUserRoute,
-                ),),
+                ),
+              ),
               duration: 1500,
               type: AnimatedSplashType.StaticDuration,
-            )
-        ));
+            )));
   }
 }

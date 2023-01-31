@@ -259,30 +259,30 @@ class _UserServices extends State<UserServices> with NavigationStates {
                   )
                 ],
               ),
-              Container(
-                width: MediaQuery.of(context).size.width * 0.7,
-                height: 45.0,
-                child: FlatButton(
-                  shape: new RoundedRectangleBorder(
-                    borderRadius: new BorderRadius.circular(30.0),
-                  ),
-                  color: Color(0xffAD8B19),
-                  onPressed: () async {
-                    Navigator.push(
-                        context,
-                        PageTransition(
-                            child: Inmediato(),
-                            type: PageTransitionType.rightToLeft));
-                  },
-                  child: Text(
-                    "Escoje tu corte",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16.0,
-                        fontFamily: "BAHNSCHRIFT"),
-                  ),
-                ),
-              ),
+              // Container(
+              //   width: MediaQuery.of(context).size.width * 0.7,
+              //   height: 45.0,
+              //   child: FlatButton(
+              //     shape: new RoundedRectangleBorder(
+              //       borderRadius: new BorderRadius.circular(30.0),
+              //     ),
+              //     color: Color(0xffAD8B19),
+              //     onPressed: () async {
+              //       Navigator.push(
+              //           context,
+              //           PageTransition(
+              //               child: Inmediato(),
+              //               type: PageTransitionType.rightToLeft));
+              //     },
+              //     child: Text(
+              //       "Escoje tu corte",
+              //       style: TextStyle(
+              //           color: Colors.white,
+              //           fontSize: 16.0,
+              //           fontFamily: "BAHNSCHRIFT"),
+              //     ),
+              //   ),
+              // ),
               SizedBox(
                 height: 20,
               ),
@@ -396,30 +396,30 @@ class _UserServices extends State<UserServices> with NavigationStates {
               SizedBox(
                 height: 20,
               ),
-              Container(
-                width: MediaQuery.of(context).size.width * 0.7,
-                height: 35.0,
-                child: FlatButton(
-                  shape: new RoundedRectangleBorder(
-                    borderRadius: new BorderRadius.circular(30.0),
-                  ),
-                  color: Color(0xffAD8B19),
-                  onPressed: () async {
-                    Navigator.push(
-                        context,
-                        PageTransition(
-                            child: SelectCard(),
-                            type: PageTransitionType.rightToLeft));
-                  },
-                  child: Text(
-                    "ACEPTAR",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16.0,
-                        fontFamily: "BAHNSCHRIFT"),
-                  ),
-                ),
-              ),
+              // Container(
+              //   width: MediaQuery.of(context).size.width * 0.7,
+              //   height: 35.0,
+              //   child: FlatButton(
+              //     shape: new RoundedRectangleBorder(
+              //       borderRadius: new BorderRadius.circular(30.0),
+              //     ),
+              //     color: Color(0xffAD8B19),
+              //     onPressed: () async {
+              //       Navigator.push(
+              //           context,
+              //           PageTransition(
+              //               child: SelectCard(),
+              //               type: PageTransitionType.rightToLeft));
+              //     },
+              //     child: Text(
+              //       "ACEPTAR",
+              //       style: TextStyle(
+              //           color: Colors.white,
+              //           fontSize: 16.0,
+              //           fontFamily: "BAHNSCHRIFT"),
+              //     ),
+              //   ),
+              // ),
               SizedBox(
                 height: 20,
               ),

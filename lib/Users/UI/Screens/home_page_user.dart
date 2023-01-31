@@ -8,16 +8,16 @@ import 'package:flutter/material.dart';
 import 'package:generic_bloc_provider/generic_bloc_provider.dart';
 
 import 'user_resume.dart';
+
 class HomePageUser extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
     return _HomePageUser();
   }
-
 }
 
-class _HomePageUser extends State<HomePageUser>{
+class _HomePageUser extends State<HomePageUser> {
   final FirebaseMessaging _fcm = FirebaseMessaging.instance;
   @override
   void initState() {
@@ -54,21 +54,24 @@ class _HomePageUser extends State<HomePageUser>{
     //   },
     // );
   }
+
   int indexTap = 1;
   final List<Widget> widgetsChildren = [
     UserResume(),
     UserServices(),
-    BlocProvider<UserBloc>(bloc: UserBloc(), child:UserProfile(),),
+    BlocProvider<UserBloc>(
+      bloc: UserBloc(),
+      child: UserProfile(),
+    ),
     FAQUsers()
   ];
 
-  void onTapped (int index){
-
+  void onTapped(int index) {
     setState(() {
       indexTap = index;
     });
-
   }
+
   UserBloc userBloc;
   @override
   Widget build(BuildContext context) {
@@ -77,65 +80,54 @@ class _HomePageUser extends State<HomePageUser>{
     return Scaffold(
       body: widgetsChildren[indexTap],
       bottomNavigationBar: Theme(
-        data: Theme.of(context).copyWith(
-            canvasColor: Color(0xffffffff),
-            primaryColor: Color(0xffAD8B19)
-        ),
-        child: WillPopScope(
-            child: BottomNavigationBar(
-                onTap: onTapped,
-                currentIndex: indexTap,
-                items:[
-                  BottomNavigationBarItem(
-                      icon: Icon(Icons.restore,
-                          color: Color(0xffAD8B19)),
+          data: Theme.of(context).copyWith(
+              canvasColor: Color(0xffffffff), primaryColor: Color(0xffAD8B19)),
+          child: WillPopScope(
+              child: BottomNavigationBar(
+                  onTap: onTapped,
+                  currentIndex: indexTap,
+                  items: [
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.restore, color: Color(0xffAD8B19)),
                       label: "Recientes",
-                  ),
-                  BottomNavigationBarItem(
-                      icon: Icon(Icons.home,
-                          color: Color(0xffAD8B19)),
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.home, color: Color(0xffAD8B19)),
                       label: "Inicio",
-                  ),
-                  BottomNavigationBarItem(
-                      icon: Icon(Icons.person,
-                          color: Color(0xffAD8B19)),
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.person, color: Color(0xffAD8B19)),
                       label: "Perfil",
-                  ),
-                  BottomNavigationBarItem(
-                      icon: Icon(Icons.question_answer,
-                          color: Color(0xffAD8B19)),
+                    ),
+                    BottomNavigationBarItem(
+                      icon:
+                          Icon(Icons.question_answer, color: Color(0xffAD8B19)),
                       label: "Preguntas",
-                  )
-
-
-                ]
-            ),
-            onWillPop: (){
-              return showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                  content: ListTile(
-                    title: Text('¿Estás seguro que quieres cerrar sesion?'),
-                  ),
-                  actions: <Widget>[
-                    FlatButton(
-                      child: Text('Cancelar',style: TextStyle(color: Colors.grey),),
-                      onPressed: () => Navigator.of(context).pop(),
-                    ),
-                    FlatButton(
-                      color: Colors.amber,
-                      child: Text('Ok',style: TextStyle(color: Colors.white)),
-                      onPressed: () {userBloc.signOut();
-                      Navigator.of(context).pop();
-                      } ,
-                    ),
-                  ],
-                ),
-              );
-            }
-            )
-      ),
-
+                    )
+                  ]),
+              onWillPop: () {
+                // return showDialog(
+                //   context: context,
+                //   builder: (context) => AlertDialog(
+                //     content: ListTile(
+                //       title: Text('¿Estás seguro que quieres cerrar sesion?'),
+                //     ),
+                //     actions: <Widget>[
+                //       FlatButton(
+                //         child: Text('Cancelar',style: TextStyle(color: Colors.grey),),
+                //         onPressed: () => Navigator.of(context).pop(),
+                //       ),
+                //       FlatButton(
+                //         color: Colors.amber,
+                //         child: Text('Ok',style: TextStyle(color: Colors.white)),
+                //         onPressed: () {userBloc.signOut();
+                //         Navigator.of(context).pop();
+                //         } ,
+                //       ),
+                //     ],
+                //   ),
+                // );
+              })),
     );
   }
 }

@@ -13,52 +13,44 @@ class CreditCardsPage extends StatelessWidget {
   String uiduser;
   CreditCardsPage({this.uiduser});
   @override
-
   Widget build(BuildContext context) {
-
-
-
-    print("uid cards:" +uiduser);
+    print("uid cards:" + uiduser);
     return StreamBuilder<Object>(
         stream: CloudFirestoreAPI().cards,
-        builder: (BuildContext context,AsyncSnapshot snapshot) {
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
           List<CardModel> lstCards = snapshot.data;
 
           return Column(
             children: [
-              lstCards.isEmpty ? Center(
-                  child:Column(
-                    children: <Widget> [
-                      Image.asset("assets/images/noCard.png"),
-                    ],
-                  )
-              ) :
-              ListView.builder(
-                  padding: const EdgeInsets.all(20.0),
-                  shrinkWrap: true,
-                  itemCount: lstCards.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return _buildCreditCard(tarjetas: lstCards[0]);
-                  }),
+              lstCards.isEmpty
+                  ? Center(
+                      child: Column(
+                      children: <Widget>[
+                        Image.asset("assets/images/noCard.png"),
+                      ],
+                    ))
+                  : ListView.builder(
+                      padding: const EdgeInsets.all(20.0),
+                      shrinkWrap: true,
+                      itemCount: lstCards.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return _buildCreditCard(tarjetas: lstCards[0]);
+                      }),
               const Text("Agrega una nueva tarjeta en el boton +"),
               _buildAddCardButton(
-                  icon:const Icon(Icons.add,
-                    color: Colors.white,),
-                  color:  Color(0xffAD8B19),
-                  context: context
-              ),
+                  icon: const Icon(
+                    Icons.add,
+                    color: Colors.white,
+                  ),
+                  color: Color(0xffAD8B19),
+                  context: context),
             ],
           );
-        }
-    );
-
+        });
   }
 
-  Container _buildAddCardButton({
-    @required Icon icon,
-    @required Color color,
-    context
-  }) {
+  Container _buildAddCardButton(
+      {@required Icon icon, @required Color color, context}) {
     return Container(
       margin: const EdgeInsets.only(top: 24.0),
       alignment: Alignment.center,
@@ -76,55 +68,52 @@ class CreditCardsPage extends StatelessWidget {
     );
   }
 
-
   Card _buildCreditCard(
-      { @required CardModel tarjetas, BuildContext context, String cardid}) {
-
+      {@required CardModel tarjetas, BuildContext context, String cardid}) {
     return Card(
-      elevation: 4.0,
-      color: lprimaryColor,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(14),
-      ),
-
-
-      child: Stack(children: [
-
-        Container(
-          height: 200,
-          padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 22.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              _buildLogosBlock(tarjetas),
-              Padding(
-                padding: const EdgeInsets.only(top: 16.0),
-                child: Text(
-                  tarjetas.cardNumber,
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 21,
-                      fontFamily: 'CourrierPrime'),
-                ),
-              ),
-              Row(
+        elevation: 4.0,
+        color: lprimaryColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(14),
+        ),
+        child: Stack(
+          children: [
+            Container(
+              height: 200,
+              padding:
+                  const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 22.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  _buildDetailsBlock(
-                    label: 'TITULAR',
-                    value: tarjetas.cardHolderName,
+                  _buildLogosBlock(tarjetas),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 16.0),
+                    child: Text(
+                      tarjetas.cardNumber,
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 21,
+                          fontFamily: 'CourrierPrime'),
+                    ),
                   ),
-                  _buildDetailsBlock(label: 'Vencimiento', value: tarjetas.expiryDate),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      _buildDetailsBlock(
+                        label: 'TITULAR',
+                        value: tarjetas.cardHolderName,
+                      ),
+                      _buildDetailsBlock(
+                          label: 'Vencimiento', value: tarjetas.expiryDate),
+                    ],
+                  ),
                 ],
               ),
-            ],
-          ),
-        ),
-        GestureDetector(
-          onTap: (){
-
-              print('object TAP');
+            ),
+            GestureDetector(
+              onTap: () {
+                print('object TAP');
 
                 showDialog(
                   context: context,
@@ -132,53 +121,50 @@ class CreditCardsPage extends StatelessWidget {
                     // return object of type Dialog
                     return AlertDialog(
                       title: new Text("Borrar Tarjeta"),
-                      content: new Text("¿Estas seguro que quieres borrar tu tarjeta? "),
+                      content: new Text(
+                          "¿Estas seguro que quieres borrar tu tarjeta? "),
                       actions: <Widget>[
                         // usually buttons at the bottom of the dialog
-                        new FlatButton(
-                          child: new Text("No",style: TextStyle(
-                            color: Colors.black,)),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                        new FlatButton(
-                          color:Colors.red,
-                          child: new Text("Borrar"),
-                          onPressed: () {
-                            print('esta tarjeta borraras: ' + cardid);
-                            CloudFirestoreAPI().deleteUserCard(cardid);
-                            Navigator.of(context).pop();
-                          },
-                        ),
+                        // new FlatButton(
+                        //   child: new Text("No",style: TextStyle(
+                        //     color: Colors.black,)),
+                        //   onPressed: () {
+                        //     Navigator.of(context).pop();
+                        //   },
+                        // ),
+                        // new FlatButton(
+                        //   color:Colors.red,
+                        //   child: new Text("Borrar"),
+                        //   onPressed: () {
+                        //     print('esta tarjeta borraras: ' + cardid);
+                        //     CloudFirestoreAPI().deleteUserCard(cardid);
+                        //     Navigator.of(context).pop();
+                        //   },
+                        // ),
                       ],
                     );
                   },
                 );
-
-          },
-
-          child: Container(
-              padding: const EdgeInsets.only(left: 310.0, right: 0, bottom: 27.0, top: 0),
-              child: Column(crossAxisAlignment: CrossAxisAlignment.end, mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
-                  CircleAvatar(
-                      radius: 15.0,
-                      backgroundImage:
-                      NetworkImage("https://cdn4.iconfinder.com/data/icons/social-messaging-ui-color-and-shapes-4/177800/175-512.png")
-                  )
-                ],
-              ) ),
-        )
-
-      ],)
-
-    );
-
-
+              },
+              child: Container(
+                  padding: const EdgeInsets.only(
+                      left: 310.0, right: 0, bottom: 27.0, top: 0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: const [
+                      CircleAvatar(
+                          radius: 15.0,
+                          backgroundImage: NetworkImage(
+                              "https://cdn4.iconfinder.com/data/icons/social-messaging-ui-color-and-shapes-4/177800/175-512.png"))
+                    ],
+                  )),
+            )
+          ],
+        ));
   }
 
-  Row _buildLogosBlock( CardModel tarjetas) {
+  Row _buildLogosBlock(CardModel tarjetas) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
@@ -187,7 +173,6 @@ class CreditCardsPage extends StatelessWidget {
           height: 20,
           width: 18,
         ),
-
         Padding(
           padding: const EdgeInsets.only(left: 15, right: 14, top: 8),
           child: getCardTypeIcon(tarjetas.cardNumber),
@@ -195,6 +180,7 @@ class CreditCardsPage extends StatelessWidget {
       ],
     );
   }
+
   Column _buildDetailsBlock({@required String label, @required String value}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -215,9 +201,8 @@ class CreditCardsPage extends StatelessWidget {
 
 //funciones para el logo de la tarjeta dependiendo de el numero
 
-
   Map<CardType, Set<List<String>>> cardNumPatterns =
-  <CardType, Set<List<String>>>{
+      <CardType, Set<List<String>>>{
     CardType.visa: <List<String>>{
       <String>['4'],
     },
@@ -259,11 +244,11 @@ class CreditCardsPage extends StatelessWidget {
     }
 
     cardNumPatterns.forEach(
-          (CardType type, Set<List<String>> patterns) {
+      (CardType type, Set<List<String>> patterns) {
         for (List<String> patternRange in patterns) {
           // Remove any spaces
           String ccPatternStr =
-          cardNumber.replaceAll(RegExp(r'\s+\b|\b\s'), '');
+              cardNumber.replaceAll(RegExp(r'\s+\b|\b\s'), '');
           final int rangeLen = patternRange[0].length;
           // Trim the Credit Card number string to match the pattern prefix length
           if (rangeLen < cardNumber.length) {
@@ -297,7 +282,6 @@ class CreditCardsPage extends StatelessWidget {
 
     return cardType;
   }
-
 
   // This method returns the icon for the visa card type if found
   // else will return the empty container
@@ -358,9 +342,7 @@ class CreditCardsPage extends StatelessWidget {
 
     return icon;
   }
-
 }
-
 
 enum CardType {
   otherBrand,

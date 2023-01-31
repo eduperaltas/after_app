@@ -8,24 +8,22 @@ import 'package:after_app/Users/bloc/bloc_user.dart';
 import 'package:after_app/Users/model/user.dart' as us;
 import '../../../router.dart';
 import 'home_page_user.dart';
+
 //import 'package:shared_preferences/shared_preferences.dart';
 class ForgotPassword extends StatefulWidget {
-
   @override
-
   State createState() {
     return _ForgotPassword();
   }
 }
 
-
 class _ForgotPassword extends State<ForgotPassword> {
   us.User user;
 
-  final  FirebaseAuthAPI _auth = FirebaseAuthAPI();
+  final FirebaseAuthAPI _auth = FirebaseAuthAPI();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String _email, _password;
-  String error ="";
+  String error = "";
   UserBloc userBloc;
 
   @override
@@ -35,21 +33,21 @@ class _ForgotPassword extends State<ForgotPassword> {
     return _handleCurrentSession();
   }
 
-  Widget _handleCurrentSession(){
+  Widget _handleCurrentSession() {
     return StreamBuilder(
       stream: userBloc.authStatus,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         //snapshot- data - Object User
-        if(!snapshot.hasData || snapshot.hasError) {
+        if (!snapshot.hasData || snapshot.hasError) {
           return LoginUser(snapshot);
         } else {
           return HomePageUser();
         }
       },
     );
-
   }
-  Widget  LoginUser(AsyncSnapshot snapshot){
+
+  Widget LoginUser(AsyncSnapshot snapshot) {
     //user =User(phonenumber:  phonenumber);
     final ThemeData _theme = Theme.of(context);
     return Scaffold(
@@ -100,7 +98,8 @@ class _ForgotPassword extends State<ForgotPassword> {
                     TextStyle(
                       fontFamily: "BAHNSCHRIFT",
                       fontSize: 30.0,
-                      color: Colors.black,),
+                      color: Colors.black,
+                    ),
                   ),
                 ),
               ),
@@ -115,7 +114,7 @@ class _ForgotPassword extends State<ForgotPassword> {
               Container(
                 width: MediaQuery.of(context).size.width,
                 margin:
-                const EdgeInsets.only(left: 30.0, right: 30.0, top: 0.0),
+                    const EdgeInsets.only(left: 30.0, right: 30.0, top: 0.0),
                 alignment: Alignment.center,
                 child: Row(
                   children: <Widget>[
@@ -123,7 +122,7 @@ class _ForgotPassword extends State<ForgotPassword> {
                       child: new Container(
                         margin: EdgeInsets.all(8.0),
                         decoration:
-                        BoxDecoration(border: Border.all(width: 0.25)),
+                            BoxDecoration(border: Border.all(width: 0.25)),
                       ),
                     ),
                     Text(
@@ -138,147 +137,147 @@ class _ForgotPassword extends State<ForgotPassword> {
                       child: new Container(
                         margin: EdgeInsets.all(8.0),
                         decoration:
-                        BoxDecoration(border: Border.all(width: 0.25)),
+                            BoxDecoration(border: Border.all(width: 0.25)),
                       ),
                     ),
                   ],
                 ),
               ),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                margin:
-                const EdgeInsets.only(left: 29.0, right: 30.0, top: 20.0),
-                child: new Row(
-                  children: <Widget>[
-                    new Expanded(
-                      child: new Container(
-                        margin: EdgeInsets.only(right: 8.0),
-                        alignment: Alignment.center,
-                        child: new Row(
-                          children: <Widget>[
-                            new Expanded(
-                              child: new FlatButton(
-                                shape: new RoundedRectangleBorder(
-                                  borderRadius: new BorderRadius.circular(30.0),
-                                ),
-                                color: Color(0Xff3B5998),
-                                onPressed: () {
-                                  print("R");
-                                },
-                                child: new Container(
-                                  child: new Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: <Widget>[
-                                      new Expanded(
-                                        child: new FlatButton(
-                                          onPressed: () => {
-                                            userBloc.facebookSignIn().then((User user) {
-                                              userBloc.createUserData(us.User(
-                                                uid: user.uid,
-                                                name: user.displayName,
-                                                email: user.email,
-                                                photoURL: user.photoURL,
-                                              ));
-                                            })
-                                          },
-                                          padding: EdgeInsets.only(
-                                            top: 20.0,
-                                            bottom: 20.0,
-                                          ),
-                                          child: new Row(
-                                            mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                            children: <Widget>[
-                                              Icon(
-                                                FontAwesomeIcons.facebookSquare,
-                                                color: Colors.white,
-                                              ),
-                                              Text(
-                                                "FACEBOOK",
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontWeight:
-                                                    FontWeight.bold),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    new Expanded(
-                      child: new Container(
-                        margin: EdgeInsets.only(left: 8.0),
-                        alignment: Alignment.center,
-                        child: new Row(
-                          children: <Widget>[
-                            new Expanded(
-                              child: new FlatButton(
-                                shape: new RoundedRectangleBorder(
-                                  borderRadius: new BorderRadius.circular(30.0),
-                                ),
-                                color: Color(0Xffdb3236),
-                                onPressed: () => {},
-                                child: new Container(
-                                  child: new Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: <Widget>[
-                                      new Expanded(
-                                        child: new FlatButton(
-                                          onPressed: () => {
-                                            userBloc.signIn().then((User user){
-                                              userBloc.createUserData(us.User(
-                                                uid: user.uid,
-                                                name: user.displayName,
-                                                email: user.email,
-                                                photoURL: user.photoURL,
-                                              ));
-                                            }),
-                                          },
-                                          padding: EdgeInsets.only(
-                                            top: 20.0,
-                                            bottom: 20.0,
-                                          ),
-                                          child: new Row(
-                                            mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                            children: <Widget>[
-                                              Icon(
-                                                FontAwesomeIcons.google,
-                                                color: Colors.white,
-                                              ),
-                                              Text(
-                                                "GOOGLE",
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontWeight:
-                                                    FontWeight.bold),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              //   Container(
+              //     width: MediaQuery.of(context).size.width,
+              //     margin:
+              //     const EdgeInsets.only(left: 29.0, right: 30.0, top: 20.0),
+              //     child: new Row(
+              //       children: <Widget>[
+              //         new Expanded(
+              //           child: new Container(
+              //             margin: EdgeInsets.only(right: 8.0),
+              //             alignment: Alignment.center,
+              //             child: new Row(
+              //               children: <Widget>[
+              //                 new Expanded(
+              //                   child: new FlatButton(
+              //                     shape: new RoundedRectangleBorder(
+              //                       borderRadius: new BorderRadius.circular(30.0),
+              //                     ),
+              //                     color: Color(0Xff3B5998),
+              //                     onPressed: () {
+              //                       print("R");
+              //                     },
+              //                     child: new Container(
+              //                       child: new Row(
+              //                         mainAxisAlignment: MainAxisAlignment.center,
+              //                         children: <Widget>[
+              //                           new Expanded(
+              //                             child: new FlatButton(
+              //                               onPressed: () => {
+              //                                 userBloc.facebookSignIn().then((User user) {
+              //                                   userBloc.createUserData(us.User(
+              //                                     uid: user.uid,
+              //                                     name: user.displayName,
+              //                                     email: user.email,
+              //                                     photoURL: user.photoURL,
+              //                                   ));
+              //                                 })
+              //                               },
+              //                               padding: EdgeInsets.only(
+              //                                 top: 20.0,
+              //                                 bottom: 20.0,
+              //                               ),
+              //                               child: new Row(
+              //                                 mainAxisAlignment:
+              //                                 MainAxisAlignment.spaceEvenly,
+              //                                 children: <Widget>[
+              //                                   Icon(
+              //                                     FontAwesomeIcons.facebookSquare,
+              //                                     color: Colors.white,
+              //                                   ),
+              //                                   Text(
+              //                                     "FACEBOOK",
+              //                                     textAlign: TextAlign.center,
+              //                                     style: TextStyle(
+              //                                         color: Colors.white,
+              //                                         fontWeight:
+              //                                         FontWeight.bold),
+              //                                   ),
+              //                                 ],
+              //                               ),
+              //                             ),
+              //                           ),
+              //                         ],
+              //                       ),
+              //                     ),
+              //                   ),
+              //                 ),
+              //               ],
+              //             ),
+              //           ),
+              //         ),
+              //         new Expanded(
+              //           child: new Container(
+              //             margin: EdgeInsets.only(left: 8.0),
+              //             alignment: Alignment.center,
+              //             child: new Row(
+              //               children: <Widget>[
+              //                 new Expanded(
+              //                   child: new FlatButton(
+              //                     shape: new RoundedRectangleBorder(
+              //                       borderRadius: new BorderRadius.circular(30.0),
+              //                     ),
+              //                     color: Color(0Xffdb3236),
+              //                     onPressed: () => {},
+              //                     child: new Container(
+              //                       child: new Row(
+              //                         mainAxisAlignment: MainAxisAlignment.center,
+              //                         children: <Widget>[
+              //                           new Expanded(
+              //                             child: new FlatButton(
+              //                               onPressed: () => {
+              //                                 userBloc.signIn().then((User user){
+              //                                   userBloc.createUserData(us.User(
+              //                                     uid: user.uid,
+              //                                     name: user.displayName,
+              //                                     email: user.email,
+              //                                     photoURL: user.photoURL,
+              //                                   ));
+              //                                 }),
+              //                               },
+              //                               padding: EdgeInsets.only(
+              //                                 top: 20.0,
+              //                                 bottom: 20.0,
+              //                               ),
+              //                               child: new Row(
+              //                                 mainAxisAlignment:
+              //                                 MainAxisAlignment.spaceEvenly,
+              //                                 children: <Widget>[
+              //                                   Icon(
+              //                                     FontAwesomeIcons.google,
+              //                                     color: Colors.white,
+              //                                   ),
+              //                                   Text(
+              //                                     "GOOGLE",
+              //                                     textAlign: TextAlign.center,
+              //                                     style: TextStyle(
+              //                                         color: Colors.white,
+              //                                         fontWeight:
+              //                                         FontWeight.bold),
+              //                                   ),
+              //                                 ],
+              //                               ),
+              //                             ),
+              //                           ),
+              //                         ],
+              //                       ),
+              //                     ),
+              //                   ),
+              //                 ),
+              //               ],
+              //             ),
+              //           ),
+              //         ),
+              //       ],
+              //     ),
+              //   ),
             ],
           ),
         ),
@@ -289,21 +288,19 @@ class _ForgotPassword extends State<ForgotPassword> {
   Widget _loginForm(BuildContext context) {
     final ThemeData _theme = Theme.of(context);
     return Container(
-
       child: Form(
         key: _formKey,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             TextFormField(
-              decoration: InputDecoration(
-                  labelText: 'Email'
-              ),
-              validator: (input)=> input.isEmpty ? 'Ingresa un Email' : 'Se envio un enlace de recuperación al correo seleccionado',
-              onChanged: (val){
+              decoration: InputDecoration(labelText: 'Email'),
+              validator: (input) => input.isEmpty
+                  ? 'Ingresa un Email'
+                  : 'Se envio un enlace de recuperación al correo seleccionado',
+              onChanged: (val) {
                 setState(() => _email = val);
               },
-
             ),
             SizedBox(
               height: 20.0,
@@ -311,32 +308,30 @@ class _ForgotPassword extends State<ForgotPassword> {
             SizedBox(
               height: 25.0,
             ),
-            Container(
-              width: MediaQuery.of(context).size.width,
-              height: 45.0,
-              child: FlatButton(
-                shape: new RoundedRectangleBorder(
-                  borderRadius: new BorderRadius.circular(30.0),
-                ),
-                color: Color(0xffAD8B19),
-                onPressed: () async {
-                  if(_formKey.currentState.validate()){
-                    Text("Un enlace de recuperación fue enviado a tu correo");
-                    await _auth.sendPasswordResetEmail(_email);
+            // Container(
+            //   width: MediaQuery.of(context).size.width,
+            //   height: 45.0,
+            //   child: FlatButton(
+            //     shape: new RoundedRectangleBorder(
+            //       borderRadius: new BorderRadius.circular(30.0),
+            //     ),
+            //     color: Color(0xffAD8B19),
+            //     onPressed: () async {
+            //       if(_formKey.currentState.validate()){
+            //         Text("Un enlace de recuperación fue enviado a tu correo");
+            //         await _auth.sendPasswordResetEmail(_email);
 
-                  }
-                },
-                child: Text(
-                  "Enviar nueva contraseña",
-                  style: TextStyle(color: Colors.white, fontSize: 16.0,fontFamily: "BAHNSCHRIFT",),
-                ),
-              ),
-            )
+            //       }
+            //     },
+            //     child: Text(
+            //       "Enviar nueva contraseña",
+            //       style: TextStyle(color: Colors.white, fontSize: 16.0,fontFamily: "BAHNSCHRIFT",),
+            //     ),
+            //   ),
+            // )
           ],
         ),
-
       ),
     );
   }
-
 }

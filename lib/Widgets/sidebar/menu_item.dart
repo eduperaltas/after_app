@@ -1,4 +1,3 @@
-// @dart=2.9
 import 'package:flutter/material.dart';
 
 class MenuItem extends StatelessWidget {
@@ -6,7 +5,8 @@ class MenuItem extends StatelessWidget {
   final String title;
   final Function onTap;
 
-  const MenuItem({Key key, this.icon, this.title, this.onTap}) : super(key: key);
+  const MenuItem({Key key, this.icon, this.title, this.onTap})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,14 +19,17 @@ class MenuItem extends StatelessWidget {
             Icon(
               icon,
               color: Colors.white,
-              size: MediaQuery.of(context).size.height*0.025,
+              size: MediaQuery.of(context).size.height * 0.025,
             ),
-            SizedBox(
-              width: MediaQuery.of(context).size.height*0.02
-            ),
+            SizedBox(width: MediaQuery.of(context).size.height * 0.02),
             Text(
               title,
-              style: TextStyle(fontWeight: FontWeight.w300, fontSize: MediaQuery.of(context).size.height*0.025, color: Colors.white,fontFamily: "BAHNSCHRIFT", ),
+              style: TextStyle(
+                fontWeight: FontWeight.w300,
+                fontSize: MediaQuery.of(context).size.height * 0.025,
+                color: Colors.white,
+                fontFamily: "BAHNSCHRIFT",
+              ),
             )
           ],
         ),

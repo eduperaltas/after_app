@@ -11,8 +11,9 @@ import '../../Users/model/user.dart';
 import '../../Users/repository/cloud_firestore_api.dart';
 import '../../Users/repository/firebase_auth_api.dart';
 import '../MyPreferences.dart';
-import 'menu_item.dart';
+// import 'menu_item.dart';
 import 'navigation_bloc.dart';
+import 'package:after_app/Widgets/sidebar/menu_item.dart' as m;
 
 //import 'package:generic_bloc_provider/generic_bloc_provider.dart';
 class SideBar extends StatefulWidget {
@@ -128,7 +129,7 @@ class _SideBarState extends State<SideBar>
                               indent: 32,
                               endIndent: 32,
                             ),
-                            MenuItem(
+                            m.MenuItem(
                               icon: Icons.cached_rounded,
                               title: "Recientes",
                               onTap: () {
@@ -137,7 +138,7 @@ class _SideBarState extends State<SideBar>
                                     NavigationEvents.userResumeClickedEvent);
                               },
                             ),
-                            MenuItem(
+                            m.MenuItem(
                               icon: Icons.home,
                               title: "Inicio",
                               onTap: () {
@@ -146,7 +147,7 @@ class _SideBarState extends State<SideBar>
                                     NavigationEvents.homeScreenClickedEvent);
                               },
                             ),
-                            MenuItem(
+                            m.MenuItem(
                               icon: Icons.person,
                               title: "Perfil",
                               onTap: () {
@@ -155,7 +156,7 @@ class _SideBarState extends State<SideBar>
                                     NavigationEvents.userProfileClickedEvent);
                               },
                             ),
-                            MenuItem(
+                            m.MenuItem(
                               icon: Icons.question_answer,
                               title: "Preguntas Frecuentes",
                               onTap: () {
@@ -171,7 +172,7 @@ class _SideBarState extends State<SideBar>
                               indent: 32,
                               endIndent: 32,
                             ),
-                            MenuItem(
+                            m.MenuItem(
                               icon: Icons.exit_to_app,
                               title: "Logout",
                               onTap: () {
